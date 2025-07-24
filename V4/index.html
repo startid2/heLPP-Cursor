@@ -238,26 +238,14 @@ body {
   overflow: hidden;
 }
 
-.sub-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--primary-blue) 0%, var(--chart-blue) 100%);
-  opacity: 0;
-  transition: var(--transition-smooth);
-}
+
 
 .sub-card:hover {
   box-shadow: var(--shadow-lg);
   transform: translateY(-2px);
 }
 
-.sub-card:hover::before {
-  opacity: 1;
-}
+
 
 /* Styles pour les boutons de période */
 .period-tabs {
@@ -773,26 +761,14 @@ padding: 2rem;
   overflow: hidden;
 }
 
-.content-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--primary-blue) 0%, var(--chart-blue) 100%);
-  opacity: 0;
-  transition: var(--transition-smooth);
-}
+
 
 .content-card:hover {
   box-shadow: var(--shadow-lg);
   transform: translateY(-2px);
 }
 
-.content-card:hover::before {
-  opacity: 1;
-}
+
 
 /* Page header */
 .page-header {
@@ -855,17 +831,7 @@ padding: 2rem;
   overflow: hidden;
 }
 
-.metric-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, var(--primary-blue) 0%, var(--chart-blue) 100%);
-  opacity: 0;
-  transition: var(--transition-smooth);
-}
+
 
 .metric-card:hover {
   box-shadow: var(--shadow-md);
@@ -873,9 +839,7 @@ padding: 2rem;
   border-color: var(--primary-blue-light);
 }
 
-.metric-card:hover::before {
-  opacity: 1;
-}
+
 
 .metric-card .metric-value {
   font-size: var(--font-size-xl);
@@ -3179,6 +3143,8 @@ function toggleSidebar() {
         }
     }
 }
+
+
 
 // Initialisation du bouton de toggle
 document.addEventListener('DOMContentLoaded', function() {
