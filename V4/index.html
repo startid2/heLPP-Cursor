@@ -774,9 +774,15 @@ padding: 2rem;
 .page-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-bottom: var(--spacing-lg);
   position: relative;
+  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+}
+
+.page-header .pdf-link {
+  flex-shrink: 0;
 }
 
 
@@ -1392,6 +1398,198 @@ font-size: 0.9rem;
 
 
 /* Responsive design - Version optimisée complète */
+/* Corrections spécifiques pour mobile */
+@media (max-width: 768px) {
+    /* 1. Bouton aide et support - remplacer par icône */
+    .support-text {
+        display: none;
+    }
+    
+    .support-btn {
+        padding: 0.5rem;
+        min-width: 44px;
+        justify-content: center;
+    }
+    
+    .support-btn i {
+        font-size: 1.2rem;
+    }
+    
+    /* 2. Bouton utilisateur - remplacer par icône */
+    .user-text {
+        display: none;
+    }
+    
+    .user-btn {
+        padding: 0.5rem;
+        min-width: 44px;
+        justify-content: center;
+    }
+    
+    .user-btn i:first-child {
+        font-size: 1.2rem;
+    }
+    
+    .user-btn .fa-chevron-down {
+        display: none;
+    }
+    
+    /* 3. Filtres de période - éviter la coupure */
+    .period-tabs {
+        gap: 0.1rem;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 0.5rem;
+        -webkit-overflow-scrolling: touch;
+        margin: 0;
+        padding-left: 0;
+        padding-right: 0;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .period-btn {
+        flex-shrink: 0;
+        min-width: 50px;
+        max-width: 70px;
+        padding: 0.3rem 0.5rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 1rem;
+    }
+
+    .period-date-input {
+        flex-shrink: 0;
+        min-width: 100px;
+        max-width: 120px;
+        padding: 0.3rem 0.5rem;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        height: 32px;
+        border-radius: 1rem;
+        box-sizing: border-box;
+    }
+    
+    /* 4. Filtre de date custom - limiter la largeur */
+    .period-date-input {
+        width: auto !important;
+        max-width: 120px !important;
+        box-sizing: border-box;
+        margin-left: 0 !important;
+        margin-top: 0;
+        order: 2;
+    }
+    
+    /* 5. Bouton télécharger - remplacer par icône */
+    .pdf-text {
+        display: none;
+    }
+    
+    .pdf-link {
+        margin-left: 0 !important;
+        margin-top: 0;
+        justify-content: center;
+        padding: 0.5rem;
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    .pdf-link i {
+        font-size: 1.2rem;
+    }
+    
+    /* 6. Cartes des chiffres clés - limiter la largeur */
+    .metrics-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .metric-card {
+        padding: 0.75rem;
+        min-height: 70px;
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    
+    .metric-value {
+        font-size: 1rem;
+        line-height: 1.2;
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    .metric-label {
+        font-size: 0.75rem;
+        line-height: 1.1;
+        word-break: break-word;
+        overflow-wrap: break-word;
+    }
+    
+    /* 7. Graphique - augmenter la taille */
+    .chart-container {
+        height: 320px;
+        padding: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* 8. Sélecteur de date - garder les flèches à droite et gauche */
+    .allocation-date-container {
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: center;
+        margin-bottom: 1.25rem;
+    }
+    
+    .allocation-date-input {
+        width: 100% !important;
+        text-align: center;
+        order: 2;
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .date-arrow-btn {
+        order: 1;
+        flex-shrink: 0;
+        min-width: 44px;
+        min-height: 44px;
+    }
+    
+    .date-arrow-btn:last-child {
+        order: 3;
+    }
+    
+    /* Amélioration générale du layout */
+    .content-area {
+        padding: 0.75rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .content-card {
+        padding: 1rem;
+        margin-bottom: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .period-filters-container {
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+    }
+}
 @media (max-width: 991px) {
     .sidebar {
         transform: translateX(-100%);
@@ -1438,10 +1636,16 @@ font-size: 0.9rem;
 
     /* Header optimisé */
     .page-header {
-        flex-direction: column;
+        flex-direction: row;
         gap: 0.75rem;
-        align-items: flex-start;
+        align-items: center;
         margin-bottom: 1.25rem;
+        justify-content: space-between;
+    }
+
+    .page-header .pdf-link {
+        padding: 0.4rem 0.75rem;
+        font-size: 0.85rem;
     }
 
     .page-title h1 {
@@ -1569,9 +1773,9 @@ font-size: 0.9rem;
 
     /* Date picker d'allocation optimisé */
     .allocation-date-container {
-        flex-direction: column;
-        gap: 0.75rem;
-        align-items: stretch;
+        flex-direction: row;
+        gap: 0.5rem;
+        align-items: center;
         margin-bottom: 1.25rem;
     }
 
@@ -1579,11 +1783,15 @@ font-size: 0.9rem;
         width: 100% !important;
         text-align: center;
         order: 2;
+        flex: 1;
+        min-width: 0;
     }
 
     .date-arrow-btn {
-        align-self: center;
         order: 1;
+        flex-shrink: 0;
+        min-width: 44px;
+        min-height: 44px;
     }
 
     .date-arrow-btn:last-child {
@@ -1631,12 +1839,12 @@ font-size: 0.9rem;
 
 @media (max-width: 576px) {
     .content-area {
-        padding: 0.75rem;
+        padding: 0.5rem;
     }
 
     .content-card {
-        padding: 1rem;
-        margin-bottom: 1rem;
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
     }
 
     .page-title h1 {
@@ -1647,28 +1855,28 @@ font-size: 0.9rem;
     /* Métriques en grille 2x3 */
     .metrics-grid {
         grid-template-columns: repeat(2, 1fr);
-        gap: 0.75rem;
-        margin-bottom: 1.25rem;
+        gap: 0.5rem;
+        margin-bottom: 1rem;
     }
 
     .metric-card {
-        padding: 0.75rem;
-        min-height: 70px;
+        padding: 0.5rem;
+        min-height: 60px;
     }
 
     .metric-value {
-        font-size: 1rem;
-        line-height: 1.2;
+        font-size: 0.9rem;
+        line-height: 1.1;
     }
 
     .metric-label {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         line-height: 1.1;
     }
 
     /* Graphique compact */
     .chart-container {
-        height: 220px;
+        height: 280px;
         padding: 0.75rem;
     }
 
@@ -1678,77 +1886,96 @@ font-size: 0.9rem;
     }
 
     .period-tabs {
-        gap: 0.2rem;
+        gap: 0.1rem;
+        margin: 0;
+        padding: 0.5rem 0;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-x: auto;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+        min-height: 40px;
+        align-items: center;
     }
 
     .period-btn {
-        padding: 0.4rem 0.75rem;
-        font-size: 0.8rem;
-        min-width: 60px;
+        padding: 0.3rem 0.5rem;
+        font-size: 0.75rem;
+        min-width: 50px;
+        max-width: 70px;
+        height: 32px;
+    }
+
+    .period-date-input {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.75rem;
+        min-width: 100px;
+        max-width: 120px;
+        height: 32px;
     }
 
     /* Tableaux avec scroll optimisé */
     .table-container {
-        margin: 0 -0.75rem;
+        margin: 0 -0.5rem;
         border-radius: 0;
         border-left: none;
         border-right: none;
     }
 
     .custom-table {
-        min-width: 400px;
+        min-width: 350px;
     }
 
     .custom-table th,
     .custom-table td {
-        padding: 0.5rem 0.25rem;
-        font-size: 0.8rem;
+        padding: 0.4rem 0.2rem;
+        font-size: 0.75rem;
     }
 
     /* Sous-cartes compactes */
     .sub-card {
-        padding: 1rem;
-        margin-bottom: 1rem;
+        padding: 0.75rem;
+        margin-bottom: 0.75rem;
     }
 
     /* Onglets d'allocation compacts */
     .allocation-tabs {
-        gap: 0.25rem;
-        margin-bottom: 0.75rem;
+        gap: 0.2rem;
+        margin-bottom: 0.5rem;
     }
 
     .allocation-tab {
-        padding: 0.4rem 0.5rem;
-        font-size: 0.8rem;
+        padding: 0.3rem 0.4rem;
+        font-size: 0.75rem;
     }
 
     /* Top bar compacte */
     .top-bar {
-        padding: 0.75rem;
-        flex-direction: column;
-        align-items: stretch;
-        gap: 0.75rem;
+        padding: 0.5rem;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5rem;
     }
 
     .user-actions {
         flex-direction: row;
-        justify-content: space-between;
+        justify-content: flex-end;
         gap: 0.5rem;
     }
 
     .support-btn,
     .user-btn {
-        padding: 0.4rem 0.5rem;
+        padding: 0.4rem;
         font-size: 0.85rem;
-        flex: 1;
-        text-align: center;
+        min-width: 40px;
+        min-height: 40px;
     }
 
     /* Événements clés optimisés */
     .key-event-list-item {
-        padding: 0.5rem;
-        margin-bottom: 0.5rem;
-        font-size: 0.9rem;
+        padding: 0.4rem;
+        margin-bottom: 0.4rem;
+        font-size: 0.85rem;
     }
 }
 
@@ -1800,6 +2027,12 @@ font-size: 0.9rem;
     .period-tabs {
         justify-content: space-between;
         gap: 0.1rem;
+        padding: 0.5rem 0;
+        overflow-x: auto;
+        overflow-y: visible;
+        -webkit-overflow-scrolling: touch;
+        min-height: 40px;
+        align-items: center;
     }
 
     .period-btn {
@@ -1889,32 +2122,105 @@ font-size: 0.9rem;
         margin-bottom: 0.75rem;
     }
 
+    /* Filtres ultra-compacts pour iPhone 12 Pro et similaires */
+    .period-filters-container {
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+        padding: 0;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .period-tabs {
+        gap: 0.1rem;
+        padding: 0.25rem 0;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        min-height: 36px;
+        align-items: center;
+    }
+
+    .period-btn {
+        padding: 0.2rem 0.3rem;
+        font-size: 0.6rem;
+        min-width: 35px;
+        max-width: 50px;
+        height: 26px;
+        border-radius: 0.8rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .period-date-input {
+        padding: 0.2rem 0.3rem;
+        font-size: 0.6rem;
+        min-width: 80px;
+        max-width: 90px;
+        height: 26px;
+        border-radius: 0.8rem;
+        box-sizing: border-box;
+        flex-shrink: 0;
+    }
+
+    /* En-tête ultra-compact */
+    .page-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .page-title h1 {
+        font-size: var(--font-size-lg);
+        line-height: 1.2;
+        margin-bottom: 0.25rem;
+    }
+
+    .page-header .pdf-link {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.75rem;
+        align-self: flex-start;
+    }
+
+    /* Métriques en une seule colonne */
+    .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+        margin-bottom: 0.75rem;
+    }
+
     .metric-card {
-        padding: 0.5rem;
+        padding: 0.4rem;
         min-height: 50px;
     }
 
     .metric-value {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        line-height: 1.1;
     }
 
     .metric-label {
         font-size: 0.65rem;
+        line-height: 1.1;
     }
 
     /* Graphique ultra-compact */
     .chart-container {
-        height: 150px;
+        height: 160px;
         padding: 0.4rem;
-    }
-
-    /* Filtres ultra-compacts */
-    .period-btn {
-        padding: 0.25rem 0.2rem;
-        font-size: 0.65rem;
+        margin: 0;
     }
 
     /* Tableaux ultra-compacts */
+    .table-container {
+        margin: 0;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
     .custom-table {
         min-width: 300px;
     }
@@ -1922,19 +2228,188 @@ font-size: 0.9rem;
     .custom-table th,
     .custom-table td {
         padding: 0.3rem 0.15rem;
-        font-size: 0.7rem;
+        font-size: 0.65rem;
     }
 
-    /* Sous-cartes ultra-compactes */
-    .sub-card {
+        /* Boutons d'action ultra-compacts */
+    .support-btn,
+    .user-btn {
+        padding: 0.3rem 0.4rem;
+        font-size: 0.75rem;
+        min-width: 36px;
+        min-height: 36px;
+    }
+}
+
+/* Media query spécifique pour iPhone 12 Pro et écrans ultra-étroits (390px et moins) */
+@media (max-width: 390px) {
+    .content-area {
+        padding: 0.25rem;
+    }
+
+    .content-card {
         padding: 0.5rem;
         margin-bottom: 0.5rem;
     }
 
-    /* Onglets ultra-compacts */
-    .allocation-tab {
-        padding: 0.25rem 0.3rem;
-        font-size: 0.7rem;
+    /* En-tête ultra-compact */
+    .page-header {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
+        margin-bottom: 1rem;
+    }
+
+    .page-title h1 {
+        font-size: var(--font-size-lg);
+        line-height: 1.2;
+        margin-bottom: 0.25rem;
+    }
+
+    .page-header .pdf-link {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.75rem;
+        align-self: flex-start;
+    }
+
+    /* Filtres ultra-compacts pour iPhone 12 Pro */
+    .period-filters-container {
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
+        padding: 0;
+        margin: 0 0 0.5rem 0;
+    }
+
+    .period-tabs {
+        gap: 0.1rem;
+        padding: 0.25rem 0;
+        width: 100%;
+        box-sizing: border-box;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        min-height: 36px;
+        align-items: center;
+    }
+
+    .period-btn {
+        padding: 0.2rem 0.3rem;
+        font-size: 0.6rem;
+        min-width: 35px;
+        max-width: 50px;
+        height: 26px;
+        border-radius: 0.8rem;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+
+    .period-date-input {
+        padding: 0.2rem 0.3rem;
+        font-size: 0.6rem;
+        min-width: 70px;
+        max-width: 80px;
+        height: 26px;
+        border-radius: 0.8rem;
+        box-sizing: border-box;
+        flex-shrink: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* Métriques en une seule colonne */
+    .metrics-grid {
+        grid-template-columns: 1fr;
+        gap: 0.4rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .metric-card {
+        padding: 0.4rem;
+        min-height: 50px;
+    }
+
+    .metric-value {
+        font-size: 0.85rem;
+        line-height: 1.1;
+    }
+
+    .metric-label {
+        font-size: 0.65rem;
+        line-height: 1.1;
+    }
+
+    /* Graphique ultra-compact */
+    .chart-container {
+        height: 160px;
+        padding: 0.4rem;
+        margin: 0;
+    }
+
+    /* Tableaux ultra-compacts */
+    .table-container {
+        margin: 0;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+    }
+
+    .custom-table {
+        min-width: 300px;
+    }
+
+    .custom-table th,
+    .custom-table td {
+        padding: 0.3rem 0.15rem;
+        font-size: 0.65rem;
+    }
+
+    /* Boutons d'action ultra-compacts */
+    .support-btn,
+    .user-btn {
+        padding: 0.3rem 0.4rem;
+        font-size: 0.75rem;
+        min-width: 36px;
+        min-height: 36px;
+    }
+}
+
+/* Styles globaux pour éviter le débordement sur iPhone 12 Pro */
+@media (max-width: 390px) {
+    * {
+        max-width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .content-area,
+    .content-card,
+    .period-filters-container,
+    .period-tabs,
+    .metrics-grid,
+    .metric-card,
+    .chart-container,
+    .table-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+    
+    .period-date-input {
+        max-width: 80px !important;
+        min-width: 70px !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+    }
+    
+    .metric-value,
+    .metric-label {
+        word-break: break-all !important;
+        overflow-wrap: break-word !important;
+        hyphens: auto !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
     }
 }
 
@@ -2189,9 +2664,78 @@ font-size: 0.9rem;
     height: 40px;
     display: flex;
     align-items: center;
+    justify-content: center;
     cursor: pointer;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
+    min-width: 80px;
+    white-space: nowrap;
+    flex-shrink: 1;
+    position: relative;
+    z-index: 1;
+}
+
+/* Style pour le sélecteur de date - même apparence que les filtres */
+.period-date-input {
+    border-radius: 2rem;
+    background: #f8f9fa;
+    color: #333;
+    border: 1px solid #e3e6ea;
+    font-weight: 500;
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    box-shadow: none;
+    margin: 0;
+    height: 40px;
+    min-width: 140px;
+    max-width: 180px;
+    white-space: nowrap;
+    flex-shrink: 1;
+    position: relative;
+    z-index: 1;
+    box-sizing: border-box;
+    outline: none;
+}
+
+.period-date-input:focus {
+    border-color: #005f6c;
+    background: white;
+}
+
+/* Correction pour les filtres de période sur desktop */
+.period-tabs {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Assurer que tous les boutons sont visibles sur desktop */
+.period-filters-container {
+    width: 100%;
+    box-sizing: border-box;
+    overflow: visible;
+    position: relative;
+    padding: 0.5rem 0;
+    min-height: 50px;
+}
+
+/* Correction pour les filtres de période sur desktop */
+.period-tabs {
+    gap: 0.3rem;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0.5rem 0;
+    overflow-x: auto;
+    overflow-y: visible;
+    -webkit-overflow-scrolling: touch;
+    min-height: 50px;
+    align-items: center;
 }
 
 .period-btn.active, .period-btn:active, .period-btn:focus {
@@ -2488,10 +3032,14 @@ font-size: 0.9rem;
         </button>
     </div>
     <div class="user-actions">
-        <a href="#" class="btn-custom btn-green-text support-btn">Aide et support</a>
+        <a href="#" class="btn-custom btn-green-text support-btn">
+            <i class="fas fa-question-circle"></i>
+            <span class="support-text">Aide et support</span>
+        </a>
         <div class="user-dropdown">
             <div class="btn-custom btn-green-text user-btn">
-                Imhoff Alexander
+                <i class="fas fa-user"></i>
+                <span class="user-text">Imhoff Alexander</span>
                 <i class="fas fa-chevron-down"></i>
             </div>
         </div>
@@ -2506,25 +3054,24 @@ font-size: 0.9rem;
             <div class="page-title">
                 <h1>Évolution de vos placements</h1>
             </div>
+            <a href="#" id="pdfButton"
+               class="pdf-link"
+               title="Télécharger l'évolution de vos placements pour la période sélectionnée">
+                <i class="fas fa-file-pdf"></i>
+                <span class="pdf-text">Télécharger la période</span>
+            </a>
         </div>
 
         <!-- Ligne de sélection de période -->
-        <div class="period-filters-container" style="display: flex; align-items: stretch; gap: var(--spacing-xs); margin-bottom: var(--spacing-xs);">
-            <div class="period-tabs" style="display: flex; gap: var(--spacing-xs); flex-wrap: wrap; border-bottom: none; padding-bottom: 0;">
+        <div class="period-filters-container" style="display: flex; align-items: stretch; gap: var(--spacing-xs); margin-bottom: var(--spacing-xs); width: 100%; box-sizing: border-box; overflow: hidden;">
+            <div class="period-tabs" style="display: flex; gap: var(--spacing-xs); flex-wrap: wrap; border-bottom: none; padding-bottom: 0; width: 100%;">
                 <button class="btn period-btn active" data-period="all" data-subtitle="Du 08.10.2024 au 30 juin 2025">Tout</button>
                 <button class="btn period-btn" data-period="6m" data-subtitle="Du 30 janvier 2025 au 30 juin 2025">6 mois</button>
                 <button class="btn period-btn" data-period="3m" data-subtitle="Du 30 mars 2025 au 30 juin 2025">3 mois</button>
                 <button class="btn period-btn" data-period="1m" data-subtitle="Du 30 mai 2025 au 30 juin 2025">1 mois</button>
                 <button class="btn period-btn" data-period="1w" data-subtitle="Du 23 juin 2025 au 30 juin 2025">1 semaine</button>
+                <input id="customDateRange" class="form-control period-date-input" style="width: 270px; max-width: 100%;" placeholder="Du jj/mm/aaaa au jj/mm/aaaa">
             </div>
-            <input id="customDateRange" class="form-control period-date-input" style="width: 270px; max-width: 100%;" placeholder="Du jj/mm/aaaa au jj/mm/aaaa">
-            <a href="#" id="pdfButton"
-               class="pdf-link"
-               title="Télécharger l'évolution de vos placements pour la période sélectionnée"
-               style="margin-left: auto; display: flex; align-items: center; gap: 0.4em; font-weight: 500; color: var(--primary-blue); text-decoration: none;">
-                <i class="fas fa-file-pdf"></i>
-                Télécharger la période
-            </a>
         </div>
         
         <!-- Ligne fine sous les filtres -->
