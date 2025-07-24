@@ -1,0 +1,127 @@
+@font-face {
+  font-family: 'DM Sans';
+  src: url('to-delete/DMSans-VariableFont_opsz,wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'DM Sans';
+  src: url('to-delete/DMSans-Italic-VariableFont_opsz,wght.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: italic;
+}
+body {
+  background: #f8f9fa;
+  font-family: 'DM Sans', Arial, sans-serif;
+}
+.sidebar {
+  min-height: 100vh;
+  background: #f7f8f9;
+  border-right: 1px solid #e9ecef;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 0 0 20px 0;
+  padding: 0;
+}
+.sidebar-logo {
+ 
+  padding: 32px 24px 32px 24px;
+  width: 100%;
+  box-sizing: border-box;
+}
+.sidebar-logo img {
+  display: block;
+  width: 100%;
+  max-width: 130px;
+  height: auto;
+}
+.sidebar-sticky {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+.sidebar .nav {
+  padding: 0;
+  margin: 0;
+}
+.sidebar-section {
+  font-weight: 700;
+  font-size: 18px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-left: 32px;
+  letter-spacing: -0.5px;
+}
+.sidebar .nav-item {
+  margin-bottom: 0;
+}
+.sidebar .nav-link {
+  color: #222;
+  font-size: 16px;
+  font-weight: 400;
+  padding: 10px 0 10px 56px;
+  border-radius: 0;
+  position: relative;
+  background: transparent;
+  margin-bottom: 0;
+  transition: background 0.2s;
+}
+.sidebar .nav-link.active {
+  background: #f0f4fa;
+  color: #222;
+  font-weight: 500;
+}
+.sidebar .nav-link.active::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 8px;
+  background: #197c7b;
+  border-radius: 0 4px 4px 0;
+}
+.sidebar-footer {
+  background: #f7f8f9;
+  padding: 32px 24px 24px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  width: 100%;
+  box-sizing: border-box;
+}
+.sidebar-footer .footer-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.sidebar-footer .footer-logo.izelen {
+  align-items: flex-end;
+}
+.sidebar-footer img {
+  max-width: 120px;
+  height: auto;
+}
+.sidebar-footer .footer-text {
+  font-size: 13px;
+  color: #222;
+  margin-top: 4px;
+  font-weight: 400;
+}
+@media (max-width: 991.98px) {
+  .sidebar {
+    display: none;
+  }
+}
+@media (max-width: 767.98px) {
+  .table-responsive {
+    font-size: 0.95rem;
+  }
+  .progress-bar {
+    font-size: 1rem;
+  }
+  .sidebar-footer {
+    position: static !important;
+  }
+} 

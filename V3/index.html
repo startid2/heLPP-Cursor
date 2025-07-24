@@ -1,0 +1,2535 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeLPP Fondation de libre passage</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<style>
+:root {
+--primary-blue: #005f6c;
+--sidebar-bg: #f8f9fa;
+--border-light: #e9ecef;
+--text-muted: #6c757d;
+--success-green: #00aa00;
+--danger-red: #dc3545;
+--chart-orange: #FFB86B; /* orange pastel modernisé */
+--chart-blue: #4F8CFF;   /* bleu flat moderne */
+--strategy-blue: #4d8beb;
+--bar-shadow: 0 4px 16px rgba(79,140,255,0.10);
+--bar-radius: 12px;
+}
+
+* {
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+background-color: #eff3f7;
+margin: 0;
+padding: 0;
+}
+
+/* Layout principal */
+.app-container {
+min-height: 100vh;
+display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+width: 280px;
+background: var(--sidebar-bg);
+border-right: 1px solid var(--border-light);
+position: fixed;
+top: 0;
+left: 0;
+height: 100vh;
+overflow-y: auto;
+z-index: 1000;
+box-shadow: none;
+padding-left: 0;
+border-left: none;
+transition: all 0.3s ease;
+}
+
+.sidebar.collapsed {
+width: 70px;
+}
+
+.sidebar.collapsed .sidebar-header .logo img {
+display: none;
+}
+
+.sidebar.collapsed .nav-section,
+.sidebar.collapsed .nav-link span {
+display: none;
+}
+
+.sidebar.collapsed .nav-link {
+justify-content: center;
+padding: 0.75rem;
+}
+
+.sidebar.collapsed .nav-link i {
+margin-right: 0;
+}
+
+/* Bouton de collapse */
+.sidebar-toggle-flat {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0.5rem 0.7rem;
+    margin-right: 0.5rem;
+    cursor: pointer;
+    outline: none;
+    transition: color 0.2s;
+}
+.sidebar-toggle-flat:hover i {
+    color: var(--primary-blue);
+}
+
+.sidebar-header {
+padding: 1.5rem;
+text-align: center;
+border-bottom: 1px solid var(--border-light);
+}
+
+.logo {
+display: flex;
+align-items: center;
+justify-content: center;
+height: 60px;
+}
+
+.logo img {
+max-height: 35px;
+max-width: 140px;
+object-fit: contain;
+}
+
+.nav-section {
+padding: 1rem 1.5rem 0.5rem;
+font-weight: 600;
+color: #333;
+font-size: 1rem;
+text-transform: uppercase;
+letter-spacing: 0.5px;
+}
+
+.nav-item {
+margin: 0.25rem 0;
+}
+
+.nav-link {
+display: flex;
+align-items: center;
+padding: 0.75rem 1.5rem;
+color: var(--text-muted);
+text-decoration: none;
+border-radius: 0;
+border-left: 4px solid transparent;
+transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+background-color: #e9ecef;
+color: var(--primary-blue);
+}
+
+.nav-link.active {
+background-color: #eff3f7;
+color: var(--primary-blue);
+border-left-color: var(--primary-blue);
+font-weight: 600;
+}
+
+.nav-link i {
+width: 20px;
+margin-right: 0.75rem;
+flex-shrink: 0;
+}
+
+.nav-link span {
+transition: opacity 0.3s ease;
+}
+
+/* Main content */
+.main-content {
+flex: 1;
+margin-left: 280px;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+transition: margin-left 0.3s ease;
+}
+
+.main-content.expanded {
+margin-left: 70px;
+}
+
+/* Top bar */
+.top-bar {
+background: white;
+border-bottom: 1px solid var(--border-light);
+padding: 1rem 2rem;
+display: flex;
+justify-content: flex-end;
+align-items: center;
+}
+
+.user-actions {
+display: flex;
+gap: 1rem;
+align-items: center;
+}
+
+.btn-custom {
+padding: 0.75rem 1.5rem;
+border-radius: 8px;
+font-weight: 300;
+text-decoration: none;
+display: inline-flex;
+align-items: center;
+gap: 0.5rem;
+transition: all 0.3s ease;
+border: none;
+cursor: pointer;
+}
+
+.btn-primary-custom {
+background: var(--primary-blue);
+color: white;
+}
+
+.btn-primary-custom:hover {
+background: #004a54;
+color: white;
+}
+
+.btn-success-custom {
+background: var(--primary-blue);
+color: white;
+position: relative;
+}
+
+.btn-success-custom:hover {
+background: #004a54;
+color: white;
+}
+
+.btn-success-custom .status-indicator {
+display: inline-block;
+width: 8px;
+height: 8px;
+background: #00ff00;
+border-radius: 50%;
+margin-left: 8px;
+box-shadow: 0 0 4px rgba(0, 255, 0, 0.5);
+animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+0% { opacity: 1; transform: scale(1); }
+50% { opacity: 0.7; transform: scale(1.1); }
+100% { opacity: 1; transform: scale(1); }
+}
+
+.support-btn {
+background: white;
+border: 1px solid #e8e8e8;
+color: #005f6c;
+padding: 0.5rem 1rem;
+border-radius: 6px;
+text-decoration: none;
+font-size: 0.9rem;
+transition: all 0.3s ease;
+}
+
+.support-btn:hover {
+background: #f8f9fa;
+color: #005f6c;
+}
+
+.user-dropdown {
+position: relative;
+}
+
+.user-btn {
+background: white;
+border: 1px solid #e8e8e8;
+padding: 0.5rem 1rem;
+border-radius: 6px;
+color: var(--primary-blue);
+cursor: pointer;
+display: flex;
+align-items: center;
+gap: 0.5rem;
+}
+
+/* Content area */
+.content-area {
+flex: 1;
+padding: 2rem;
+}
+
+.content-card {
+background: white;
+border-radius: 12px;
+box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+padding: 2rem;
+margin-bottom: 2rem;
+}
+
+/* Page header */
+.page-header {
+display: flex;
+justify-content: between;
+align-items: flex-start;
+margin-bottom: 1.5rem;
+padding-bottom: 1rem;
+border-bottom: 1px solid var(--border-light);
+}
+
+.page-title {
+flex: 1;
+}
+
+.page-title h1 {
+font-size: 1.75rem;
+font-weight: 700;
+}
+
+.page-subtitle {
+color: var(--text-muted);
+font-size: 0.95rem;
+}
+
+.page-actions {
+margin-left: auto;
+}
+
+/* Performance metrics */
+.metrics-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+gap: 1.5rem;
+margin-bottom: 2rem;
+}
+
+.metric-card {
+    background: #fff;
+    border-radius: 6px;
+    box-shadow: none;
+    padding: 1rem 0.75rem;
+    text-align: center;
+    border: 1px solid #e3e6ea;
+    margin: 0;
+}
+
+.metric-card:hover {
+    box-shadow: none;
+    transform: none;
+}
+
+.metric-label {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-top: 0.5rem;
+    line-height: 1.3;
+}
+
+.metric-value {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+    letter-spacing: 0.5px;
+    word-break: break-all;
+}
+
+.metric-value.positive { color: var(--success-green); }
+.metric-value.negative { color: var(--danger-red); }
+
+/* Section headers */
+.section-header {
+margin-bottom: 1.5rem;
+padding-bottom: 1rem;
+border-bottom: 1px solid var(--border-light);
+}
+
+.section-title {
+font-size: 1.4rem;
+font-weight: 600;
+color: #333;
+margin-bottom: 0.5rem;
+}
+
+.section-subtitle {
+color: #222;
+font-size: 1rem;
+font-weight: 600;
+margin-bottom: 0.5rem;
+}
+
+/* Investment chart */
+.investment-chart {
+margin: 2rem 0;
+position: relative;
+}
+
+.chart-bar {
+height: 48px;
+border-radius: var(--bar-radius);
+display: flex;
+overflow: hidden;
+position: relative;
+margin: 1rem 0;
+box-shadow: var(--bar-shadow);
+background: linear-gradient(90deg, #eaf2ff 0%, #f7faff 100%);
+}
+
+.chart-segment {
+height: 100%;
+display: flex;
+align-items: center;
+justify-content: center;
+color: white;
+font-weight: 700;
+position: relative;
+min-width: 2%;
+transition: all 0.3s cubic-bezier(.4,0,.2,1);
+border-radius: var(--bar-radius);
+font-size: 1.1rem;
+box-shadow: none;
+}
+
+.segment-cash {
+  background: linear-gradient(90deg, #A8E6CF 60%, #d0f5e8 100%);
+  color: #218c5a;
+}
+
+.segment-fund, .segment-strategy {
+background: linear-gradient(90deg, var(--chart-blue) 60%, #a7c7ff 100%);
+color: #fff;
+}
+
+.interactive-segment {
+cursor: pointer;
+transition: transform 0.18s cubic-bezier(.4,0,.2,1), box-shadow 0.18s cubic-bezier(.4,0,.2,1), filter 0.18s;
+}
+
+.interactive-segment:hover, .interactive-segment.highlighted {
+filter: brightness(1.08) saturate(1.1);
+transform: scale(1.03);
+box-shadow: 0 6px 18px rgba(79,140,255,0.13);
+z-index: 2;
+}
+
+.segment-percentage {
+font-size: 1.05rem;
+font-weight: 700;
+text-shadow: 0 1px 2px rgba(0,0,0,0.10);
+}
+
+.chart-labels {
+display: flex;
+justify-content: space-between;
+margin-top: 1rem;
+font-size: 0.9rem;
+}
+
+.label-left {
+color: var(--chart-orange);
+font-weight: 600;
+}
+
+.label-right {
+color: var(--chart-blue);
+font-weight: 600;
+}
+
+.chart-amounts {
+display: flex;
+justify-content: space-between;
+margin-top: 0.5rem;
+font-size: 0.85rem;
+color: var(--text-muted);
+}
+
+/* Tooltip pour la barre */
+.chart-bar-tooltip {
+position: absolute;
+background: rgba(0, 0, 0, 0.9);
+color: white;
+padding: 10px 12px;
+border-radius: 6px;
+font-size: 13px;
+line-height: 1.4;
+pointer-events: none;
+z-index: 1000;
+transform: translate(-50%, -100%);
+margin-top: -10px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+display: none;
+white-space: nowrap;
+}
+
+.chart-bar-tooltip::after {
+content: '';
+position: absolute;
+top: 100%;
+left: 50%;
+transform: translateX(-50%);
+border: 5px solid transparent;
+border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+/* Indicateur bullet pour les segments */
+.segment-bullet {
+position: absolute;
+top: -8px;
+left: 50%;
+transform: translateX(-50%);
+width: 8px;
+height: 8px;
+background: white;
+border-radius: 50%;
+box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+opacity: 0;
+transition: all 0.3s ease;
+}
+
+.interactive-segment.highlighted .segment-bullet {
+opacity: 1;
+top: -12px;
+}
+
+/* Tables */
+.table-container {
+overflow-x: visible;
+margin-top: 1rem;
+border-radius: 8px;
+box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.custom-table {
+width: 100%;
+border-collapse: collapse;
+min-width: 600px;
+}
+
+.custom-table th {
+background: #f8f9fa;
+padding: 1rem;
+text-align: left;
+font-weight: 600;
+color: #333;
+border-bottom: 2px solid var(--border-light);
+white-space: nowrap;
+}
+
+.custom-table td {
+padding: 1rem;
+border-bottom: 1px solid var(--border-light);
+white-space: nowrap;
+}
+
+.custom-table tr:hover {
+background: #f8f9fa;
+}
+
+.text-right {
+text-align: right;
+}
+
+.table-row {
+transition: all 0.3s ease;
+}
+
+.table-row.highlighted {
+box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+transform: scale(1.01);
+}
+
+.table-row.highlighted-cash {
+background: rgba(168, 230, 207, 0.3) !important;
+}
+
+.table-row.highlighted-fund {
+background: rgba(44, 129, 165, 0.1) !important;
+}
+
+/* Strategy section */
+.strategy-info {
+display: grid;
+grid-template-columns: 1fr auto;
+gap: 2rem;
+align-items: start;
+margin: 1.5rem 0;
+}
+
+.strategy-details {
+display: flex;
+flex-direction: column;
+gap: 0.75rem;
+}
+
+.strategy-detail {
+font-size: 0.95rem;
+line-height: 1.5;
+}
+
+.strategy-actions {
+display: flex;
+gap: 1rem;
+}
+
+/* Period info section */
+.period-info {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 1.5rem;
+padding: 1rem 0;
+}
+
+.period-subtitle {
+color: #222;
+font-size: 1rem;
+font-weight: 600;
+margin-bottom: 0.5rem;
+}
+
+/* Period tabs */
+.period-tabs {
+display: flex;
+gap: 0.5rem;
+margin-bottom: 1rem;
+border-bottom: 2px solid var(--border-light);
+padding-bottom: 0;
+overflow-x: auto;
+}
+
+.period-tab {
+padding: 0.75rem 1.5rem;
+background: none;
+border: none;
+color: var(--text-muted);
+font-weight: 500;
+cursor: pointer;
+border-bottom: 3px solid transparent;
+white-space: nowrap;
+transition: all 0.3s ease;
+}
+
+.period-tab:hover {
+color: var(--primary-blue);
+background: rgba(0, 95, 108, 0.05);
+}
+
+.period-tab.active {
+color: var(--primary-blue);
+border-bottom: 2px solid var(--primary-blue);
+/* font-weight: 600; */
+}
+
+/* Chart container */
+.chart-container {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    position: relative;
+    height: 400px;
+    background: white;
+    border: 1px solid var(--border-light);
+    border-radius: 12px;
+    padding: 1.5rem;
+    overflow: hidden;
+}
+
+.custom-chart {
+width: 100%;
+height: 100%;
+position: relative;
+}
+
+.chart-svg {
+width: 100%;
+height: 100%;
+}
+
+.chart-line {
+fill: none;
+stroke: var(--primary-blue);
+stroke-width: 3;
+stroke-linecap: round;
+stroke-linejoin: round;
+}
+
+.chart-area {
+fill: url(#chartGradient);
+opacity: 0.3;
+}
+
+.chart-point {
+    stroke: white;
+    stroke-width: 3;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.chart-point:hover {
+fill: #004a54;
+stroke-width: 4;
+r: 8;
+}
+
+.chart-grid-line {
+stroke: #e9ecef;
+stroke-width: 1;
+opacity: 0.5;
+}
+
+.chart-axis-text {
+font-size: 12px;
+fill: #6c757d;
+font-family: inherit;
+}
+
+.chart-tooltip {
+position: absolute;
+background: rgba(0, 0, 0, 0.9);
+color: white;
+padding: 15px;
+border-radius: 8px;
+font-size: 13px;
+line-height: 1.5;
+pointer-events: none;
+z-index: 1000;
+transform: translate(-50%, -100%);
+margin-top: -10px;
+box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+display: none;
+min-width: 250px;
+}
+
+.chart-tooltip::after {
+content: '';
+position: absolute;
+top: 100%;
+left: 50%;
+transform: translateX(-50%);
+border: 6px solid transparent;
+border-top-color: rgba(0, 0, 0, 0.9);
+}
+
+.tooltip-date {
+font-weight: bold;
+margin-bottom: 8px;
+color: #fff;
+}
+
+.tooltip-line {
+margin: 4px 0;
+display: flex;
+justify-content: space-between;
+}
+
+.tooltip-label {
+color: #ccc;
+}
+
+.tooltip-value {
+color: #fff;
+font-weight: 600;
+}
+
+.tooltip-positive {
+color: #4ade80;
+}
+
+.tooltip-negative {
+color: #f87171;
+}
+
+/* Animated metrics */
+.metrics-grid .metric-card {
+transition: all 0.3s ease;
+}
+
+.metrics-grid .metric-value {
+transition: all 0.5s ease;
+}
+
+/* Footer */
+.footer {
+background: #f8f9fa;
+border-top: 1px solid var(--border-light);
+padding: 2rem;
+margin-top: auto;
+}
+
+.footer-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+gap: 2rem;
+margin-bottom: 2rem;
+}
+
+.footer-section h6 {
+font-weight: 600;
+margin-bottom: 1rem;
+color: #333;
+}
+
+.footer-links {
+list-style: none;
+padding: 0;
+margin: 0;
+}
+
+.footer-links li {
+margin-bottom: 0.5rem;
+}
+
+.footer-links a {
+color: var(--text-muted);
+text-decoration: none;
+font-size: 0.9rem;
+}
+
+.footer-links a:hover {
+color: var(--primary-blue);
+}
+
+.footer-bottom {
+text-align: center;
+padding-top: 1.5rem;
+border-top: 1px solid var(--border-light);
+color: var(--text-muted);
+font-size: 0.9rem;
+}
+
+/* Mobile menu */
+.mobile-menu-btn {
+display: none;
+position: fixed;
+top: 1rem;
+left: 1rem;
+z-index: 1100;
+background: var(--primary-blue);
+color: white;
+border: none;
+border-radius: 8px;
+padding: 0.75rem;
+cursor: pointer;
+}
+
+.mobile-overlay {
+display: none;
+position: fixed;
+top: 0;
+left: 0;
+width: 100%;
+height: 100%;
+background: rgba(0,0,0,0.5);
+z-index: 999;
+}
+
+/* Responsive design */
+@media (max-width: 991px) {
+.sidebar {
+    transform: translateX(-100%);
+}
+
+.sidebar.show {
+    transform: translateX(0);
+}
+
+.main-content {
+    margin-left: 0;
+}
+
+.main-content.expanded {
+    margin-left: 0;
+}
+
+.mobile-menu-btn {
+    display: block;
+}
+
+.mobile-overlay.show {
+    display: block;
+}
+}
+
+@media (max-width: 768px) {
+.content-area {
+    padding: 1rem;
+}
+
+.content-card {
+    padding: 1.5rem;
+}
+
+.page-header {
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.period-tabs {
+    gap: 0.25rem;
+    padding-bottom: 0;
+}
+
+.period-tab {
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
+}
+
+.chart-container {
+    height: 350px;
+    margin: 1.5rem 0;
+    padding: 1rem;
+}
+
+.metrics-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.metric-card {
+    padding: 1rem;
+}
+
+.metric-value {
+    font-size: 1.2rem;
+}
+
+.table-container {
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.custom-table th,
+.custom-table td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.9rem;
+}
+
+.strategy-info {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+}
+
+.strategy-actions {
+    justify-content: center;
+}
+
+.top-bar {
+    padding: 1rem;
+}
+
+.user-actions {
+}
+
+.period-info {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: flex-start !important;
+}
+}
+
+@media (max-width: 576px) {
+    .metrics-grid {
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 0.5rem;
+    }
+}
+
+/* Ajout dans le <style> : nouvelle classe pour le vert utilisé dans les onglets */
+.btn-green-text {
+    color: #005f6c !important;
+    border-color: #005f6c !important;
+}
+.btn-green-text:hover, .btn-green-text:focus {
+    color: #005f6c !important;
+    border-color: #005f6c !important;
+    background: #eaffea !important;
+}
+
+.key-event-list-item.highlighted {
+    background: #f3f8ff;
+    border-radius: 6px;
+}
+.key-event-point {
+    cursor: pointer;
+    transition: r 0.2s;
+}
+
+.key-event-point.highlighted {
+    filter: drop-shadow(0 0 0px #0000) drop-shadow(0 0 12px #0006);
+    stroke: #fff !important;
+    stroke-width: 5 !important;
+    r: 10;
+}
+
+.key-event-point {
+    stroke: none !important;
+}
+
+/* Ajout du style pour le lien PDF */
+.pdf-link:hover {
+    text-decoration: underline;
+    color: #004a54;
+}
+
+.custom-table th.text-right {
+    text-align: right !important;
+}
+
+/* Ajout du style pour les boutons de période arrondis */
+.period-btn {
+    border-radius: 2rem;
+    background: #f8f9fa;
+    color: #333;
+    border: 1px solid #e3e6ea;
+    font-weight: 500;
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    transition: all 0.2s;
+    box-shadow: none;
+    margin: 0;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+.period-btn.active, .period-btn:active, .period-btn:focus {
+    background: #e9ecef;
+    color: var(--primary-blue);
+    border-color: var(--primary-blue);
+    outline: none;
+}
+.period-btn:hover {
+    background: #e9ecef;
+    color: var(--primary-blue);
+    border-color: var(--primary-blue);
+}
+
+.period-date-input {
+    border-radius: 2rem;
+    padding: 0.5rem 1.5rem;
+    height: 40px;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    border: 1px solid #e3e6ea;
+    color: #333;
+    background: #f8f9fa;
+    margin-left: 0.5rem;
+    width: 270px;
+    white-space: normal;
+    vertical-align: middle;
+    line-height: 1.5;
+}
+
+/* Style pour les onglets d'allocation (type tabs soulignés) */
+.allocation-tabs {
+    display: flex;
+    gap: 1.2rem;
+    border-bottom: 2px solid var(--border-light);
+    margin-bottom: 1.2rem;
+}
+.allocation-tab {
+    background: none;
+    border: none;
+    outline: none;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    padding: 0.45rem 0.5rem 0.35rem 0.5rem;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.allocation-tab.active {
+    color: var(--primary-blue);
+    border-bottom: 2px solid var(--primary-blue);
+    /* font-weight: 600; */
+}
+.allocation-tab:hover {
+    color: var(--primary-blue);
+    background: rgba(0, 95, 108, 0.05);
+}
+
+/* Style pour les icônes d'onglet d'allocation */
+.allocation-tab-icon {
+    font-size: 1.05em;
+    margin-right: 0.5em;
+    opacity: 0.7;
+    vertical-align: middle;
+}
+
+/* Pastille verte pour l'onglet conforme */
+.allocation-green-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #27ae60;
+    margin-left: 0.4em;
+    box-shadow: 0 0 4px #27ae60aa;
+}
+
+/* Style pour le sélecteur de date et les flèches dans l'allocation */
+.allocation-date-input {
+    border: 1px solid #e3e6ea;
+    border-radius: 2rem;
+    padding: 0.5rem 1.5rem;
+    font-size: 1rem;
+    background: #f8f9fa;
+    color: #333;
+    width: 170px;
+    text-align: center;
+    outline: none;
+    transition: border 0.2s;
+    height: 40px;
+    box-sizing: border-box;
+    appearance: none;
+}
+.allocation-date-input:focus {
+    border-color: var(--primary-blue);
+}
+.date-arrow-btn {
+    background: #f8f9fa;
+    border: 1px solid #e3e6ea;
+    color: var(--primary-blue);
+    font-size: 1.1rem;
+    padding: 0 1rem;
+    border-radius: 2rem;
+    cursor: pointer;
+    transition: background 0.2s, border 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 40px;
+    box-sizing: border-box;
+    margin: 0 0.2rem;
+}
+.date-arrow-btn:hover, .date-arrow-btn:focus {
+    background: #e9ecef;
+    border-color: var(--primary-blue);
+}
+
+.sub-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+    border: 1px solid #e3e6ea;
+    padding: 2rem 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+/* Ajouté ou modifié dans le <style> */
+.chart-bar {
+  position: relative;
+}
+.chart-segment {
+  border-radius: 0 !important;
+}
+.chart-segment:first-child {
+  border-top-left-radius: var(--bar-radius) !important;
+  border-bottom-left-radius: var(--bar-radius) !important;
+}
+.chart-segment:last-child {
+  border-top-right-radius: var(--bar-radius) !important;
+  border-bottom-right-radius: var(--bar-radius) !important;
+}
+
+/* Overlay pour les graduations */
+.chart-bar-graduations {
+  position: absolute;
+  top: -12px; left: 0; right: 0; bottom: -12px;
+  pointer-events: none;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+}
+.chart-bar-graduation {
+  width: 0;
+  height: 124%;
+  border-left: 1px solid #e9ecef;
+  margin: 0;
+  align-self: stretch;
+  opacity: 0.5;
+}
+</style>
+</head>
+<body>
+<!-- Mobile menu button -->
+<button class="mobile-menu-btn" id="mobileMenuBtn">
+<i class="fas fa-bars"></i>
+</button>
+
+<!-- Mobile overlay -->
+<div class="mobile-overlay" id="mobileOverlay"></div>
+
+<div class="app-container">
+<!-- Sidebar -->
+<nav class="sidebar" id="sidebar">
+<button class="sidebar-toggle-flat" id="sidebarToggle" title="Réduire le menu">
+    <i class="fas fa-grip-lines" style="font-size: 1.5rem; color: #6c757d;"></i>
+</button>
+
+<div class="sidebar-header">
+    <div class="logo">
+        <img src="assets/images/aromed-logo.svg" alt="AROMED Logo" style="max-height: 35px; max-width: 140px; object-fit: contain;" />
+    </div>
+</div>
+
+<div class="nav-section">Investissements</div>
+<div class="nav-item">
+    <a href="#" class="nav-link active">
+        <i class="fas fa-chart-line"></i>
+        <span>Vos placements</span>
+    </a>
+</div>
+<div class="nav-item">
+    <a href="#" class="nav-link">
+        <i class="fas fa-user-shield"></i>
+        <span>Profil de risque et stratégie</span>
+    </a>
+</div>
+
+<div class="nav-section">Reporting</div>
+<div class="nav-item">
+    <a href="#" class="nav-link">
+        <i class="fas fa-exchange-alt"></i>
+        <span>Mouvements financiers</span>
+    </a>
+</div>
+<div class="nav-item">
+    <a href="#" class="nav-link">
+        <i class="fas fa-share-alt"></i>
+        <span>Mouvements de parts</span>
+    </a>
+</div>
+
+<div class="nav-section">Mutations</div>
+<div class="nav-item">
+    <a href="#" class="nav-link">
+        <i class="fas fa-exchange-alt"></i>
+        <span>Gestion des mutations</span>
+    </a>
+</div>
+
+<div class="nav-section">Documents</div>
+<div class="nav-item">
+    <a href="#" class="nav-link">
+        <i class="fas fa-file-alt"></i>
+        <span>Mes documents</span>
+    </a>
+</div>
+</nav>
+
+<!-- Main content -->
+<main class="main-content" id="mainContent">
+<!-- Top bar -->
+<div class="top-bar">
+    <div class="user-actions">
+        <a href="#" class="btn-custom btn-green-text support-btn">Aide et support</a>
+        <div class="user-dropdown">
+            <div class="btn-custom btn-green-text user-btn">
+                Imhoff Alexander
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Content area -->
+<div class="content-area">
+    <div class="content-card" style="margin-bottom:2rem;">
+        <!-- Page header -->
+        <div class="page-header">
+            <div class="page-title">
+                <h1 style="font-size: 1.6rem; font-weight: 700; color: #111;">Évolution de vos placements</h1>
+            </div>
+        </div>
+
+        <!-- Ligne de sélection de période -->
+        <div style="display: flex; align-items: stretch; gap: 0.5rem; margin-bottom: 0.5rem;">
+            <div class="period-tabs" style="display: flex; gap: 0.5rem; flex-wrap: wrap; border-bottom: none; padding-bottom: 0;">
+                <button class="btn period-btn active" data-period="all" data-subtitle="Du 08.10.2024 au 30 juin 2025">Tout</button>
+                <button class="btn period-btn" data-period="6m" data-subtitle="Du 30 janvier 2025 au 30 juin 2025">6 derniers mois</button>
+                <button class="btn period-btn" data-period="3m" data-subtitle="Du 30 mars 2025 au 30 juin 2025">3 derniers mois</button>
+                <button class="btn period-btn" data-period="1m" data-subtitle="Du 30 mai 2025 au 30 juin 2025">Dernier mois</button>
+                <button class="btn period-btn" data-period="1w" data-subtitle="Du 23 juin 2025 au 30 juin 2025">Dernière semaine</button>
+            </div>
+            <input id="customDateRange" class="form-control period-date-input" style="width: 270px; max-width: 100%;" placeholder="Du jj/mm/aaaa au jj/mm/aaaa">
+            <a href="#" id="pdfButton"
+               class="pdf-link"
+               title="Télécharger l'évolution de vos placements pour la période sélectionnée"
+               style="margin-left: auto; display: flex; align-items: center; gap: 0.4em; font-weight: 500; color: var(--primary-blue); text-decoration: none;">
+                <i class="fas fa-file-pdf"></i>
+                Télécharger la période
+            </a>
+        </div>
+        <div style="border-bottom: 1.5px solid #e9ecef; margin-bottom: 2rem; width: 100%;"></div>
+
+        <!-- Performance metrics -->
+        <div class="metrics-grid" id="metricsGrid">
+            <div class="metric-card">
+                <div class="metric-value positive" id="apports">140'000.00</div>
+                <div class="metric-label">Apports</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value negative" id="frais">417.23</div>
+                <div class="metric-label">Frais et sorties</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value positive" id="performance">40.00</div>
+                <div class="metric-label">Performance nette</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value positive" id="twr">0.03 %</div>
+                <div class="metric-label">Performance TWR</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="solde">139'622.77</div>
+                <div class="metric-label">Solde actuel</div>
+            </div>
+        </div>
+
+        <!-- Chart -->
+        <div style="display: flex; gap: 2rem; align-items: flex-start; margin-top: 0;">
+            <div style="flex: 1;">
+                <div class="chart-container">
+                    <div class="custom-chart" id="customChart">
+                        <svg class="chart-svg" id="chartSvg" viewBox="0 0 800 300">
+                            <defs>
+                                <linearGradient id="chartGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" style="stop-color:#005f6c;stop-opacity:0.3" />
+                                    <stop offset="100%" style="stop-color:#005f6c;stop-opacity:0.05" />
+                                </linearGradient>
+                            </defs>
+                            <g id="gridLines"></g>
+                            <g id="yAxisLabels"></g>
+                            <g id="xAxisLabels"></g>
+                            <path id="chartArea" class="chart-area"></path>
+                            <path id="chartLine" class="chart-line"></path>
+                            <g id="chartPoints"></g>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <div style="width: 380px; min-width: 260px;">
+                <div class="section-title" style="font-size: 1.2rem; font-weight: 600; color: #333; margin-bottom: 0.5rem;">Événements clés</div>
+                <ul id="keyEventsList" style="list-style: none; padding: 0; margin: 0;"></ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="content-card">
+        <!-- Titre principal de la carte -->
+        <div class="page-header" style="margin-bottom: 1rem;">
+            <div class="page-title">
+                <h1 style="font-size: 1.6rem; font-weight: 700; color: #111;">Investissement de votre portefeuille</h1>
+            </div>
+        </div>
+        <!-- Date picker déplacé ici -->
+        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 2rem;">
+            <button type="button" class="date-arrow-btn" id="datePrevBtn" aria-label="Jour précédent">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <input id="allocationDatePicker" class="allocation-date-input" />
+            <button type="button" class="date-arrow-btn" id="dateNextBtn" aria-label="Jour suivant">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+        <!-- Première sous-carte : Allocation effective -->
+        <div class="sub-card">
+            <!-- Titre, date picker, onglets, barre, tableau Allocation effective -->
+            <div class="section-title" style="margin-bottom:0.5rem;">Allocation effective de votre portefeuille</div>
+            <div style="height:0.5rem;"></div>
+        
+            <!-- Onglets pour changer de vue d'allocation -->
+            <div class="allocation-tabs">
+                <button class="allocation-tab active" data-tab="produit-alloc" type="button">
+                    <i class="fas fa-list allocation-tab-icon" aria-hidden="true"></i>
+                    Répartition par produit
+                </button>
+                <button class="allocation-tab" data-tab="classe-alloc" type="button" style="display: flex; align-items: center; gap: 0.5em;">
+                    <i class="fas fa-chart-bar allocation-tab-icon" aria-hidden="true"></i>
+                    Répartition par classes d'actifs
+                    <span class="allocation-green-dot"></span>
+                </button>
+            </div>
+            <div id="allocationProduitView" style="display: block;">
+                <!-- Investment chart -->
+                <div class="investment-chart">
+                    <div class="chart-bar" id="chartBar">
+                        <div class="chart-segment segment-cash interactive-segment" 
+                            style="width: 3%;" 
+                            data-product="liquidites"
+                            data-amount="CHF 1.42"
+                            data-name="Liquidités (cash)"
+                            data-section="allocationEffective"
+                            onmouseover="highlightTableRow('liquidites', event, 'allocationEffective')"
+                            onmouseout="removeHighlight('allocationEffective')">
+                            <span class="segment-percentage">0%</span>
+                            <div class="segment-bullet"></div>
+                        </div>
+                        <div class="chart-segment segment-fund interactive-segment" 
+                            style="width: 97%;" 
+                            data-product="csa-mixta"
+                            data-amount="CHF 139'621.35"
+                            data-name="CSA 2 Mixta-BVG 35"
+                            data-section="allocationEffective"
+                            onmouseover="highlightTableRow('csa-mixta', event, 'allocationEffective')"
+                            onmouseout="removeHighlight('allocationEffective')">
+                            <span class="segment-percentage">100%</span>
+                            <div class="segment-bullet"></div>
+                        </div>
+                    </div>
+                    <div class="chart-bar-tooltip" id="chartBarTooltipAllocation"></div>
+                    <div class="chart-bar-graduations">
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                      <div class="chart-bar-graduation"></div>
+                    </div>
+                </div>
+                <!-- Investment table -->
+                <div class="table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Produits</th>
+                                <th class="text-right">Nombre de parts</th>
+                                <th class="text-right">Prix par part</th>
+                                <th class="text-right">Total en CHF</th>
+                                <th class="text-right">Total en %</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row" data-product="liquidites" data-section="allocationEffective"
+                                data-amount="CHF 1.42"
+                                data-name="Liquidités (cash)"
+                                onmouseover="highlightChartSegmentFromTable('liquidites', event, 'allocationEffective')"
+                                onmouseout="removeChartHighlight('allocationEffective')">
+                                <td>Liquidités (cash)</td>
+                                <td class="text-right">-</td>
+                                <td class="text-right">-</td>
+                                <td class="text-right">1.42</td>
+                                <td class="text-right">0.00 %</td>
+                            </tr>
+                            <tr class="table-row" data-product="csa-mixta" data-section="allocationEffective"
+                                data-amount="CHF 139'621.35"
+                                data-name="CSA 2 Mixta-BVG 35"
+                                onmouseover="highlightChartSegmentFromTable('csa-mixta', event, 'allocationEffective')"
+                                onmouseout="removeChartHighlight('allocationEffective')">
+                                <td>CSA 2 Mixta-BVG 35</td>
+                                <td class="text-right">81.746</td>
+                                <td class="text-right">1'707.99</td>
+                                <td class="text-right">139'621.35</td>
+                                <td class="text-right">100.00 %</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+<div id="allocationClasseView" style="display: none;">
+    <div style="padding: 0.5rem 0 0 0;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.7rem;">
+            <div style="display: flex; align-items: center; gap: 0.5em; color: #27ae60; font-weight: 500; font-size: 1rem;">
+                <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;"><circle cx="11" cy="11" r="10" stroke="#27ae60" stroke-width="2" fill="none"/><path d="M6 11.5L10 15L16 7" stroke="#27ae60" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                <span>La répartition par classe d'actifs correspond à votre stratégie d'investissement.</span>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: flex-end;">
+                <span style="font-size: 0.95em; color: #888; background: #f5f6fa; border-radius: 1.5rem; padding: 0.3em 1.1em; border: 1px solid #e3e6ea; font-weight: 500; cursor: default; opacity: 1;">Limites OPP2 standard</span>
+            </div>
+        </div>
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: separate; border-spacing: 0 10px;">
+                <thead>
+                    <tr>
+                        <th style="width: 180px; font-weight: 500; color: #222; text-align: left; background: none; border: none;">&nbsp;</th>
+                        <th colspan="11" style="font-weight: 500; color: #222; text-align: left; background: none; border: none;">
+                            <div style="display: flex; justify-content: space-between; font-size: 0.95rem; color: #222;">
+                                <span>0&nbsp;%</span>
+                                <span>10&nbsp;%</span>
+                                <span>20&nbsp;%</span>
+                                <span>30&nbsp;%</span>
+                                <span>40&nbsp;%</span>
+                                <span>50&nbsp;%</span>
+                                <span>60&nbsp;%</span>
+                                <span>70&nbsp;%</span>
+                                <span>80&nbsp;%</span>
+                                <span>90&nbsp;%</span>
+                                <span>100&nbsp;%</span>
+                            </div>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="font-weight: 500; color: #222;">Liquidités</td>
+                        <td colspan="11">
+                            <div style="position: relative; height: 12px; background: #f3f4f8; border-radius: 8px;">
+                                <div style="position: absolute; left: 0; top: 0; height: 100%; width: 7%; background: #003366; border-radius: 8px;"></div>
+                                <span style="position: absolute; left: 7%; top: 50%; transform: translateY(-50%); margin-left: 0.2em;">
+                                    <svg width="18" height="18" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;"><circle cx="11" cy="11" r="10" stroke="#27ae60" stroke-width="2" fill="none"/><path d="M6 11.5L10 15L16 7" stroke="#27ae60" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 500; color: #222;">Obligations</td>
+                        <td colspan="11">
+                            <div style="position: relative; height: 12px; background: #f3f4f8; border-radius: 8px;">
+                                <div style="position: absolute; left: 0; top: 0; height: 100%; width: 40%; background: #003366; border-radius: 8px;"></div>
+                                <span style="position: absolute; left: 40%; top: 50%; transform: translateY(-50%); margin-left: 0.2em;">
+                                    <svg width="18" height="18" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;"><circle cx="11" cy="11" r="10" stroke="#27ae60" stroke-width="2" fill="none"/><path d="M6 11.5L10 15L16 7" stroke="#27ae60" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 500; color: #222;">Titres hypothécaires</td>
+                        <td colspan="11">
+                            <div style="position: relative; height: 12px; background: #f3f4f8; border-radius: 8px;">
+                                <div style="position: absolute; left: 0; top: 0; height: 100%; width: 5%; background: #003366; border-radius: 8px;"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 500; color: #222;">Placements en actions</td>
+                        <td colspan="11">
+                            <div style="position: relative; height: 12px; background: #f3f4f8; border-radius: 8px;">
+                                <div style="position: absolute; left: 0; top: 0; height: 100%; width: 38%; background: #003366; border-radius: 8px;"></div>
+                                <span style="position: absolute; left: 38%; top: 50%; transform: translateY(-50%); margin-left: 0.2em;">
+                                    <svg width="18" height="18" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;"><circle cx="11" cy="11" r="10" stroke="#27ae60" stroke-width="2" fill="none"/><path d="M6 11.5L10 15L16 7" stroke="#27ae60" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 500; color: #222;">Placements immobiliers</td>
+                        <td colspan="11">
+                            <div style="position: relative; height: 12px; background: #f3f4f8; border-radius: 8px;">
+                                <div style="position: absolute; left: 0; top: 0; height: 100%; width: 15%; background: #003366; border-radius: 8px;"></div>
+                                <span style="position: absolute; left: 15%; top: 50%; transform: translateY(-50%); margin-left: 0.2em;">
+                                    <svg width="18" height="18" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;"><circle cx="11" cy="11" r="10" stroke="#27ae60" stroke-width="2" fill="none"/><path d="M6 11.5L10 15L16 7" stroke="#27ae60" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 500; color: #222;">Placements alternatifs</td>
+                        <td colspan="11">
+                            <div style="position: relative; height: 12px; background: #f3f4f8; border-radius: 8px;">
+                                <div style="position: absolute; left: 0; top: 0; height: 100%; width: 4%; background: #003366; border-radius: 8px;"></div>
+                                <span style="position: absolute; left: 4%; top: 50%; transform: translateY(-50%); margin-left: 0.2em;">
+                                    <svg width="18" height="18" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;"><circle cx="11" cy="11" r="10" stroke="#27ae60" stroke-width="2" fill="none"/><path d="M6 11.5L10 15L16 7" stroke="#27ae60" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 500; color: #222;">Devises étrangères</td>
+                        <td colspan="11">
+                            <div style="position: relative; height: 12px; background: #f3f4f8; border-radius: 8px;">
+                                <div style="position: absolute; left: 0; top: 0; height: 100%; width: 20%; background: #003366; border-radius: 8px;"></div>
+                                <span style="position: absolute; left: 20%; top: 50%; transform: translateY(-50%); margin-left: 0.2em;">
+                                    <svg width="18" height="18" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;"><circle cx="11" cy="11" r="10" stroke="#27ae60" stroke-width="2" fill="none"/><path d="M6 11.5L10 15L16 7" stroke="#27ae60" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-weight: 500; color: #222;">Infrastructures</td>
+                        <td colspan="11">
+                            <div style="position: relative; height: 12px; background: #f3f4f8; border-radius: 8px;">
+                                <div style="position: absolute; left: 0; top: 0; height: 100%; width: 2%; background: #003366; border-radius: 8px;"></div>
+                                <span style="position: absolute; left: 2%; top: 50%; transform: translateY(-50%); margin-left: 0.2em;">
+                                    <svg width="18" height="18" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;"><circle cx="11" cy="11" r="10" stroke="#27ae60" stroke-width="2" fill="none"/><path d="M6 11.5L10 15L16 7" stroke="#27ae60" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                                </span>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+        </div>
+        <!-- Deuxième sous-carte : Stratégie cible -->
+        <div class="sub-card">
+            <!-- Titre, jauge, barre, tableau Stratégie cible -->
+            <div class="section-title" style="text-align: left; position: relative;"> 
+                Stratégie cible
+                <a href="#" style="position: absolute; right: 0; top: 0; font-size: 1.05rem; color: #10646e; text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 0.4em;">
+                    <i class="fas fa-history" style="font-size: 1.1em;"></i>
+                    Voir historique des allocations stratégiques
+                </a>
+            </div>
+            <div style="height:0.5rem;"></div>
+            <div class="content-card" style="padding: 0; margin-bottom: 1.2rem; box-shadow: none;">
+                <div style="background: #fff; border: 1.2px solid #e3e6ea; border-radius: 14px; display: flex; align-items: stretch; justify-content: space-between; padding: 1.2rem 1.5rem; max-width: 100%; margin: 0;">
+    
+                    <!-- Colonne 1: Infos Stratégie -->
+                    <div style="flex: 1.5; display: flex; flex-direction: column; justify-content: center; text-align: left; padding-right: 1.5rem;">
+                        <div style="font-size: 1.35rem; font-weight: 700; color: #111; margin-bottom: 0.2rem;">CS Mixta 35</div>
+                        <div style="font-size: 1rem; color: #444;">Tarification : Sans tarif (par défaut)</div>
+                    </div>
+
+                    <!-- Colonne 2: Score de la stratégie -->
+                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: center; text-align: left;">
+                        <div style="font-size: 1rem; color: #444; margin-bottom: 0.2rem;">Score de risque</div>
+                        <div style="font-size: 1.25rem; font-weight: 700; color: #111;">4.00 / 7</div>
+                    </div>
+
+                    <!-- Colonne 3: Jauge -->
+                    <div style="flex: 1; display: flex; align-items: center; justify-content: center; padding: 0 1.5rem; border-left: 1px solid #e9ecef;">
+                        <img src="assets/images/jauge.png" alt="Jauge de risque" style="width:100px; height:auto;">
+                    </div>
+                    
+                    <!-- Colonne 4: Votre profil de risque -->
+                    <div style="flex: 1.5; display: flex; flex-direction: column; justify-content: center; text-align: left; padding: 0 1.5rem; border-left: 1px solid #e9ecef;">
+                        <div style="font-size: 1rem; color: #444; margin-bottom: 0.2rem;">Votre profil de risque</div>
+                        <div style="font-size: 1.25rem; font-weight: 700; color: #111;">4.40 / 7 <span style="font-weight: 400;">(Équilibré)</span></div>
+                    </div>
+
+                    <!-- Colonne 5: Bouton -->
+                    <div style="flex: 1.5; display: flex; align-items: center; justify-content: center; padding-left: 1.5rem; border-left: 1px solid #e9ecef;">
+                        <button type="button" style="background: #10646e; color: #fff; font-weight: 500; border: none; border-radius: 8px; padding: 0.8rem 1.6rem; font-size: 1rem; cursor: pointer; white-space: nowrap;">Modifier la stratégie</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Barre et tableau Stratégie cible -->
+            <div style="margin-top: 1.2rem;">
+                <div class="allocation-tabs" style="display: flex; gap: 1.2rem; border-bottom: 2px solid var(--border-light); margin-bottom: 1.2rem;">
+                    <button class="allocation-tab active" type="button" style="cursor: default;">
+                        <i class="fas fa-list allocation-tab-icon" aria-hidden="true"></i>
+                        Répartition par produit
+                    </button>
+                    <button class="allocation-tab" type="button" style="display: flex; align-items: center; gap: 0.5em; cursor: default;">
+                        <i class="fas fa-chart-bar allocation-tab-icon" aria-hidden="true"></i>
+                        Répartition par classes d'actifs
+                        <span class="allocation-green-dot"></span>
+                    </button>
+                </div>
+                <div class="investment-chart">
+                    <div class="chart-bar">
+                        <div class="chart-segment segment-strategy interactive-segment" 
+                            style="width: 100%;"
+                            data-product="csa-mixta"
+                            data-amount="CHF 139'621.35"
+                            data-name="CSA 2 Mixta-BVG 35"
+                            data-section="strategieCible"
+                            onmouseover="highlightTableRow('csa-mixta', event, 'strategieCible')"
+                            onmouseout="removeHighlight('strategieCible')">
+                            <span class="segment-percentage">100%</span>
+                            <div class="segment-bullet"></div>
+                        </div>
+                        <div class="chart-bar-graduations">
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                          <div class="chart-bar-graduation"></div>
+                        </div>
+                    </div>
+                    <div class="chart-bar-tooltip" id="chartBarTooltipStrategie"></div>
+                </div>
+                <div class="table-container">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Produits</th>
+                                <th class="text-right">% de la stratégie globale</th>
+                                <th class="text-right">Score de risque</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="table-row" data-product="csa-mixta" data-section="strategieCible"
+                                data-amount="CHF 139'621.35"
+                                data-name="CSA 2 Mixta-BVG 35"
+                                onmouseover="highlightChartSegmentFromTable('csa-mixta', event, 'strategieCible')"
+                                onmouseout="removeChartHighlight('strategieCible')">
+                                <td>CSA 2 Mixta-BVG 35</td>
+                                <td class="text-right">100.00 %</td>
+                                <td class="text-right">4</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="footer">
+    <div class="footer-grid">
+        <div class="footer-section">
+            <h6>Dispositions légales</h6>
+            <ul class="footer-links">
+                <li><a href="#">Risques et responsabilités</a></li>
+                <li><a href="#">Protection des données</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h6>Règlements (DE / EN sur demande)</h6>
+            <ul class="footer-links">
+                <li><a href="#">Règlement d'organisation</a></li>
+                <li><a href="#">Règlement de prévoyance</a></li>
+                <li><a href="#">Règlement de placement</a></li>
+                <li><a href="#">Règlement sur les coûts</a></li>
+            </ul>
+        </div>
+        <div class="footer-section">
+            <h6>heLPP Prévoyance Sàrl</h6>
+            <div style="color: var(--text-muted); font-size: 0.9rem; line-height: 1.6;">
+                c/o Ideark SA<br>
+                Rue Marconi 19<br>
+                1920 Martigny<br>
+                Tél. +41 78 642 00 42<br>
+                Email: admin@helpp.ch
+            </div>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        Copyright © 2025 heLPP Prévoyance Sàrl
+    </div>
+</footer>
+</main>
+</div>
+
+<!-- Tooltip global pour le graphique -->
+<div class="chart-tooltip" id="chartTooltip"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/fr.js"></script>
+<script>
+// 1. Données
+// (bloc periodData et keyEvents)
+const periodData = {
+'all': {
+    labels: ['08 Oct', '15 Oct', '01 Nov', '15 Nov', '01 Déc', '15 Déc', '01 Jan', '15 Jan', '01 Fév', '15 Fév', '01 Mar', '15 Mar', '01 Avr', '15 Avr', '01 Mai', '15 Mai', '01 Juin', '15 Juin', '21 Juin'],
+    data: [140000, 139950, 139800, 139850, 139900, 139950, 140200, 139900, 139700, 139750, 139400, 139500, 139600, 139700, 139800, 139850, 139750, 139650, 139622.77],
+    detailedInfo: [
+        { date: '08 Oct 2024', value: 140000, apports: 140000, performance: 0, frais: 0 },
+        { date: '15 Oct 2024', value: 139950, apports: 140000, performance: -50, frais: 0 },
+        { date: '01 Nov 2024', value: 139800, apports: 140000, performance: -150, frais: 50 },
+        { date: '15 Nov 2024', value: 139850, apports: 140000, performance: -100, frais: 50 },
+        { date: '01 Déc 2024', value: 139900, apports: 140000, performance: -50, frais: 50 },
+        { date: '15 Déc 2024', value: 139950, apports: 140000, performance: 0, frais: 50 },
+        { date: '01 Jan 2025', value: 140200, apports: 140000, performance: 250, frais: 50 },
+        { date: '15 Jan 2025', value: 139900, apports: 140000, performance: -50, frais: 50 },
+        { date: '01 Fév 2025', value: 139700, apports: 140000, performance: -250, frais: 50 },
+        { date: '15 Fév 2025', value: 139750, apports: 140000, performance: -200, frais: 50 },
+        { date: '01 Mar 2025', value: 139400, apports: 140000, performance: -550, frais: 50 },
+        { date: '15 Mar 2025', value: 139500, apports: 140000, performance: -450, frais: 50 },
+        { date: '01 Avr 2025', value: 139600, apports: 140000, performance: -350, frais: 50 },
+        { date: '15 Avr 2025', value: 139700, apports: 140000, performance: -250, frais: 50 },
+        { date: '01 Mai 2025', value: 139800, apports: 140000, performance: -150, frais: 50 },
+        { date: '15 Mai 2025', value: 139850, apports: 140000, performance: -100, frais: 50 },
+        { date: '01 Juin 2025', value: 139750, apports: 0, performance: -200, frais: 25 },
+        { date: '15 Juin 2025', value: 139650, apports: 0, performance: -300, frais: 25 },
+        { date: '21 Juin 2025', value: 139622.77, apports: 0, performance: -327.23, frais: 25 }
+    ],
+    metrics: {
+        apports: "0.00",
+        frais: "222.77",
+        performance: "-154.46",
+        twr: "-0.11 %",
+        solde: "139'622.77"
+    }
+},
+'3m': {
+    labels: ['01 Avr', '08 Avr', '15 Avr', '22 Avr', '01 Mai', '08 Mai', '15 Mai', '22 Mai', '01 Juin', '08 Juin', '15 Juin', '21 Juin'],
+    data: [139600, 139650, 139700, 139720, 139800, 139830, 139850, 139820, 139750, 139720, 139650, 139622.77],
+    detailedInfo: [
+        { date: '01 Avr 2025', value: 139600, apports: 0, performance: -50, frais: 10 },
+        { date: '08 Avr 2025', value: 139650, apports: 0, performance: 0, frais: 10 },
+        { date: '15 Avr 2025', value: 139700, apports: 0, performance: 50, frais: 10 },
+        { date: '22 Avr 2025', value: 139720, apports: 0, performance: 70, frais: 10 },
+        { date: '01 Mai 2025', value: 139800, apports: 0, performance: 150, frais: 10 },
+        { date: '08 Mai 2025', value: 139830, apports: 0, performance: 180, frais: 10 },
+        { date: '15 Mai 2025', value: 139850, apports: 0, performance: 200, frais: 10 },
+        { date: '22 Mai 2025', value: 139820, apports: 0, performance: 170, frais: 10 },
+        { date: '01 Juin 2025', value: 139750, apports: 0, performance: 100, frais: 10 },
+        { date: '08 Juin 2025', value: 139720, apports: 0, performance: 70, frais: 10 },
+        { date: '15 Juin 2025', value: 139650, apports: 0, performance: 0, frais: 10 },
+        { date: '21 Juin 2025', value: 139622.77, apports: 0, performance: -27.23, frais: 10 }
+    ],
+    metrics: {
+        apports: "0.00",
+        frais: "77.23",
+        performance: "100.00",
+        twr: "0.02 %",
+        solde: "139'622.77"
+    }
+},
+'1m': {
+    labels: ['1 Juin', '3 Juin', '5 Juin', '8 Juin', '10 Juin', '12 Juin', '15 Juin', '17 Juin', '19 Juin', '21 Juin'],
+    data: [139800, 139820, 139790, 139750, 139730, 139710, 139650, 139640, 139630, 139622.77],
+    detailedInfo: [
+        { date: '1 Juin 2025', value: 139800, apports: 0, performance: 50, frais: 5 },
+        { date: '3 Juin 2025', value: 139820, apports: 0, performance: 70, frais: 5 },
+        { date: '5 Juin 2025', value: 139790, apports: 0, performance: 40, frais: 5 },
+        { date: '8 Juin 2025', value: 139750, apports: 0, performance: 0, frais: 5 },
+        { date: '10 Juin 2025', value: 139730, apports: 0, performance: -20, frais: 5 },
+        { date: '12 Juin 2025', value: 139710, apports: 0, performance: -40, frais: 5 },
+        { date: '15 Juin 2025', value: 139650, apports: 0, performance: -100, frais: 5 },
+        { date: '17 Juin 2025', value: 139640, apports: 0, performance: -110, frais: 5 },
+        { date: '19 Juin 2025', value: 139630, apports: 0, performance: -120, frais: 5 },
+        { date: '21 Juin 2025', value: 139622.77, apports: 0, performance: -127.23, frais: 5 }
+    ],
+    metrics: {
+        apports: "0.00",
+        frais: "27.23",
+        performance: "-150.00",
+        twr: "-0.13 %",
+        solde: "139'622.77"
+    }
+},
+'1w': {
+    labels: ['Lun 16', 'Mar 17', 'Mer 18', 'Jeu 19', 'Ven 20', 'Sam 21', 'Dim 22'],
+    data: [139700, 139680, 139650, 139630, 139622.77, 139622.77, 139622.77],
+    detailedInfo: [
+        { date: 'Lundi 16 Juin', value: 139700, apports: 0, performance: -50, frais: 1 },
+        { date: 'Mardi 17 Juin', value: 139680, apports: 0, performance: -70, frais: 1 },
+        { date: 'Mercredi 18 Juin', value: 139650, apports: 0, performance: -100, frais: 1 },
+        { date: 'Jeudi 19 Juin', value: 139630, apports: 0, performance: -120, frais: 1 },
+        { date: 'Vendredi 20 Juin', value: 139622.77, apports: 0, performance: -127.23, frais: 1 },
+        { date: 'Samedi 21 Juin', value: 139622.77, apports: 0, performance: -127.23, frais: 1 },
+        { date: 'Dimanche 22 Juin', value: 139622.77, apports: 0, performance: -127.23, frais: 1 }
+    ],
+    metrics: {
+        apports: "0.00",
+        frais: "7.23",
+        performance: "-70.00",
+        twr: "-0.06 %",
+        solde: "139'622.77"
+    }
+}
+};
+// (bloc keyEvents)
+const keyEvents = [
+    { date: '2025-01-10', label: 'Versement exceptionnel', color: '#3498db' },
+    { date: '2025-02-05', label: 'Changement de profil de risque', color: '#16a085' },
+    { date: '2025-03-15', label: 'Changement de stratégie', color: '#e67e22' },
+    { date: '2025-04-01', label: 'Achat de parts', color: '#f39c12' },
+    { date: '2025-05-20', label: 'Retrait partiel', color: '#c0392b' },
+    { date: '2025-06-01', label: 'Prélèvement de frais trimestriel', color: '#e74c3c' },
+    { date: '2025-06-10', label: 'Frais annuels', color: '#8e44ad' },
+    { date: '2025-06-15', label: 'Rebalancement', color: '#8e44ad' },
+    { date: '2025-06-21', label: 'Retrait EPL', color: '#27ae60' }
+];
+
+// 2. Fonctions (parseDate, createSVGChart, showTooltip, hideTooltip, updateMetrics, etc.)
+function parseDate(str) {
+    if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+        return new Date(str);
+    }
+    const mois = {
+        'Jan':0, 'Fév':1, 'Fev':1, 'Mar':2, 'Avr':3, 'Mai':4, 'Juin':5, 'Juil':6, 'Aoû':7, 'Aou':7, 'Sep':8, 'Oct':9, 'Nov':10, 'Déc':11, 'Dec':11
+    };
+    const match = str.match(/(\d{1,2}) ([A-Za-zéûîô]+) (\d{4})/);
+    if (match) {
+        const day = parseInt(match[1], 10);
+        const month = mois[match[2].slice(0,3)] ?? mois[match[2]];
+        const year = parseInt(match[3], 10);
+        return new Date(year, month, day);
+    }
+    const match2 = str.match(/\w+ (\d{1,2}) ([A-Za-zéûîô]+)(?: (\d{4}))?/);
+    if (match2) {
+        const day = parseInt(match2[1], 10);
+        const month = mois[match2[2].slice(0,3)] ?? mois[match2[2]];
+        const year = match2[3] ? parseInt(match2[3], 10) : (new Date()).getFullYear();
+        return new Date(year, month, day);
+    }
+    return new Date(str);
+}
+
+// Fonction pour créer la courbe SVG
+function createSVGChart(period = 'all') {
+    const data = periodData[period];
+    const values = data.data;
+    const labels = data.labels;
+    const detailedInfo = data.detailedInfo;
+    // Dimensions du graphique
+    const margin = { top: 20, right: 20, bottom: 60, left: 80 };
+    const width = 800 - margin.left - margin.right;
+    const height = 300 - margin.top - margin.bottom;
+    const minValue = Math.min(...values) * 0.9999;
+    const maxValue = Math.max(...values) * 1.0001;
+    const valueRange = maxValue - minValue;
+    function getX(index) {
+        return margin.left + (index * width) / (values.length - 1);
+    }
+    function getY(value) {
+        return margin.top + height - ((value - minValue) / valueRange) * height;
+    }
+    document.getElementById('gridLines').innerHTML = '';
+    document.getElementById('yAxisLabels').innerHTML = '';
+    document.getElementById('xAxisLabels').innerHTML = '';
+    document.getElementById('chartPoints').innerHTML = '';
+    // Grille horizontale
+    const gridLines = document.getElementById('gridLines');
+    for (let i = 0; i <= 5; i++) {
+        const value = minValue + (valueRange * i) / 5;
+        const y = getY(value);
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', margin.left);
+        line.setAttribute('y1', y);
+        line.setAttribute('x2', margin.left + width);
+        line.setAttribute('y2', y);
+        line.setAttribute('class', 'chart-grid-line');
+        gridLines.appendChild(line);
+        // Labels Y
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', margin.left - 10);
+        text.setAttribute('y', y + 4);
+        text.setAttribute('text-anchor', 'end');
+        text.setAttribute('class', 'chart-axis-text');
+        text.textContent = 'CHF ' + value.toLocaleString('fr-CH', { maximumFractionDigits: 0 });
+        document.getElementById('yAxisLabels').appendChild(text);
+    }
+    // Labels X
+    const xLabels = document.getElementById('xAxisLabels');
+    labels.forEach((label, index) => {
+        if (index % Math.ceil(labels.length / 6) === 0 || index === labels.length - 1) {
+            const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            text.setAttribute('x', getX(index));
+            text.setAttribute('y', margin.top + height + 20);
+            text.setAttribute('text-anchor', 'middle');
+            text.setAttribute('class', 'chart-axis-text');
+            text.textContent = label;
+            xLabels.appendChild(text);
+        }
+    });
+    // Courbe
+    let pathData = `M ${getX(0)} ${getY(values[0])}`;
+    for (let i = 1; i < values.length; i++) {
+        pathData += ` L ${getX(i)} ${getY(values[i])}`;
+    }
+    document.getElementById('chartLine').setAttribute('d', pathData);
+    // Aire sous la courbe
+    let areaData = pathData + ` L ${getX(values.length - 1)} ${margin.top + height} L ${getX(0)} ${margin.top + height} Z`;
+    document.getElementById('chartArea').setAttribute('d', areaData);
+    // Points événements clés
+    const dateMin = parseDate(detailedInfo[0].date);
+    const dateMax = parseDate(detailedInfo[detailedInfo.length - 1].date);
+    const eventPoints = keyEvents.filter(ev => {
+        const evDate = parseDate(ev.date);
+        return evDate >= dateMin && evDate <= dateMax;
+    });
+    const eventIdxSet = new Set();
+    eventPoints.forEach(ev => {
+        const [year, month, day] = ev.date.split('-');
+        const mois = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Aoû', 'Sep', 'Oct', 'Nov', 'Déc'];
+        const moisNum = parseInt(month, 10);
+        const moisLabel = mois[moisNum - 1];
+        const label1 = `${parseInt(day, 10)} ${moisLabel}`;
+        const label2 = `${day.padStart(2, '0')} ${moisLabel}`;
+        const label3 = `${moisLabel} ${parseInt(day, 10)}`;
+        const label4 = `${moisLabel} ${day.padStart(2, '0')}`;
+        const label5 = `${day}`;
+        const idx = labels.findIndex(lab => {
+            if (lab.endsWith(` ${parseInt(day, 10)}`) || lab.endsWith(` ${day.padStart(2, '0')}`)) return true;
+            if (lab.includes(label1) || lab.includes(label2) || lab.includes(label3) || lab.includes(label4)) return true;
+            if (lab === label5) return true;
+            return false;
+        });
+        if (idx !== -1) eventIdxSet.add(idx);
+        return true;
+    });
+    // Points normaux
+    const pointsGroup = document.getElementById('chartPoints');
+    values.forEach((value, index) => {
+        if (eventIdxSet.has(index)) return;
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', getX(index));
+        circle.setAttribute('cy', getY(value));
+        circle.setAttribute('r', 5);
+        circle.setAttribute('class', 'chart-point');
+        circle.setAttribute('fill', 'var(--primary-blue)');
+        circle.setAttribute('data-index', index);
+        circle.addEventListener('mouseenter', (e) => showTooltip(e, detailedInfo[index]));
+        circle.addEventListener('mouseleave', hideTooltip);
+        pointsGroup.appendChild(circle);
+    });
+    // Points événements clés
+    eventPoints.forEach(ev => {
+        const eventDate = parseDate(ev.date);
+        let idxBefore = -1, idxAfter = -1;
+        let dateBefore = null, dateAfter = null;
+        for (let i = 0; i < detailedInfo.length; i++) {
+            const d = detailedInfo[i];
+            const dDate = parseDate(d.date);
+            if (dDate <= eventDate) {
+                idxBefore = i;
+                dateBefore = dDate;
+            }
+            if (dDate > eventDate && idxAfter === -1) {
+                idxAfter = i;
+                dateAfter = dDate;
+            }
+        }
+        let x, y;
+        if (idxBefore === -1) {
+            x = getX(0);
+            y = getY(values[0]);
+        } else if (idxAfter === -1) {
+            x = getX(values.length - 1);
+            y = getY(values[values.length - 1]);
+        } else if (+dateBefore === +eventDate) {
+            x = getX(idxBefore);
+            y = getY(values[idxBefore]);
+        } else {
+            const totalDays = (dateAfter - dateBefore) / (1000*60*60*24);
+            const eventDays = (eventDate - dateBefore) / (1000*60*60*24);
+            const t = eventDays / totalDays;
+            x = getX(idxBefore) + t * (getX(idxAfter) - getX(idxBefore));
+            y = getY(values[idxBefore]) + t * (getY(values[idxAfter]) - getY(values[idxBefore]));
+        }
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', x);
+        circle.setAttribute('cy', y);
+        circle.setAttribute('r', 5);
+        circle.setAttribute('class', 'chart-point key-event-point');
+        circle.setAttribute('fill', ev.color);
+        circle.setAttribute('data-event-label', ev.label);
+        circle.setAttribute('data-event-date', ev.date);
+        pointsGroup.appendChild(circle);
+        circle.addEventListener('mouseenter', function() {
+            document.querySelectorAll('.key-event-list-item').forEach(li => li.classList.remove('highlighted'));
+            const li = document.querySelector(`.key-event-list-item[data-event-date="${ev.date}"]`);
+            if (li) li.classList.add('highlighted');
+            circle.classList.add('highlighted');
+        });
+        circle.addEventListener('mouseleave', function() {
+            document.querySelectorAll('.key-event-list-item').forEach(li => li.classList.remove('highlighted'));
+            circle.classList.remove('highlighted');
+        });
+    });
+    // Liste des événements clés à droite
+    const keyEventsList = document.getElementById('keyEventsList');
+    if (keyEventsList) {
+        keyEventsList.innerHTML = '';
+        eventPoints.forEach((ev, idx) => {
+            const [year, month, day] = ev.date.split('-');
+            const dateStr = `${day.padStart(2, '0')}.${month.padStart(2, '0')}.${year}`;
+            const li = document.createElement('li');
+            li.className = 'key-event-list-item';
+            li.setAttribute('data-event-date', ev.date);
+            li.style.display = 'flex';
+            li.style.alignItems = 'center';
+            li.style.cursor = 'pointer';
+            li.style.marginBottom = '0.75rem';
+            li.innerHTML = `<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${ev.color};margin-right:10px;"></span><span style="margin-right:8px;">${dateStr}</span> <span>${ev.label}</span>`;
+            keyEventsList.appendChild(li);
+            if (idx < eventPoints.length - 1) {
+                const sep = document.createElement('div');
+                sep.style.height = '1px';
+                sep.style.background = '#e9ecef';
+                sep.style.margin = '8px 0';
+                sep.style.opacity = '0.7';
+                keyEventsList.appendChild(sep);
+            }
+            li.addEventListener('mouseenter', function() {
+                document.querySelectorAll('.key-event-list-item').forEach(li => li.classList.remove('highlighted'));
+                li.classList.add('highlighted');
+                const pt = document.querySelector(`.key-event-point[data-event-date="${ev.date}"]`);
+                if (pt) pt.classList.add('highlighted');
+            });
+            li.addEventListener('mouseleave', function() {
+                li.classList.remove('highlighted');
+                const pt = document.querySelector(`.key-event-point[data-event-date="${ev.date}"]`);
+                if (pt) pt.classList.remove('highlighted');
+            });
+        });
+    }
+    document.getElementById('chartSvg').appendChild(pointsGroup);
+}
+
+// Fonction pour afficher le tooltip
+function showTooltip(event, info) {
+    const tooltipWidth = 260;
+    const tooltipHeight = 120;
+    let x = event.clientX;
+    let y = event.clientY;
+    x = Math.max(x, tooltipWidth / 2 + 8);
+    x = Math.min(x, window.innerWidth - tooltipWidth / 2 - 8);
+    y = Math.max(y, tooltipHeight + 8);
+    const performanceClass = info.performance >= 0 ? 'tooltip-positive' : 'tooltip-negative';
+    const performanceSign = info.performance >= 0 ? '+' : '';
+    const tooltip = document.getElementById('chartTooltip');
+    tooltip.innerHTML = `
+        <div class="tooltip-date">${info.date}</div>
+        <div class="tooltip-line">
+            <span class="tooltip-label">💰 Valeur totale:</span>
+            <span class="tooltip-value">CHF ${info.value.toLocaleString('fr-CH', { minimumFractionDigits: 2 })}</span>
+        </div>
+        <div class="tooltip-line">
+            <span class="tooltip-label">📈 Performance:</span>
+            <span class="tooltip-value ${performanceClass}">CHF ${performanceSign}${info.performance.toLocaleString('fr-CH', { minimumFractionDigits: 2 })}</span>
+        </div>
+        <div class="tooltip-line">
+            <span class="tooltip-label">💸 Frais:</span>
+            <span class="tooltip-value">CHF ${info.frais.toLocaleString('fr-CH', { minimumFractionDigits: 2 })}</span>
+        </div>
+        <div class="tooltip-line">
+            <span class="tooltip-label">🏦 Apports:</span>
+            <span class="tooltip-value">CHF ${info.apports.toLocaleString('fr-CH', { minimumFractionDigits: 2 })}</span>
+        </div>
+    `;
+    tooltip.style.position = 'fixed';
+    tooltip.style.left = x + 'px';
+    tooltip.style.top = y + 'px';
+    tooltip.style.display = 'block';
+}
+
+// Fonction pour cacher le tooltip
+function hideTooltip() {
+    const tooltip = document.getElementById('chartTooltip');
+    tooltip.style.display = 'none';
+}
+
+// Fonction pour mettre à jour les métriques
+function updateMetrics(period) {
+    const metrics = periodData[period].metrics;
+    Object.keys(metrics).forEach(key => {
+        const element = document.getElementById(key);
+        if (element) {
+            element.style.opacity = '0.5';
+            setTimeout(() => {
+                element.textContent = metrics[key];
+                element.style.opacity = '1';
+                element.classList.remove('positive', 'negative');
+                if (key === 'performance' || key === 'twr') {
+                    const value = parseFloat(metrics[key].replace(/[^-\d.]/g, ''));
+                    if (value > 0) {
+                        element.classList.add('positive');
+                    } else if (value < 0) {
+                        element.classList.add('negative');
+                    }
+                } else if (key === 'apports') {
+                    element.classList.add('positive');
+                } else if (key === 'frais') {
+                    element.classList.add('negative');
+                }
+            }, 150);
+        }
+    });
+}
+
+// Fonction pour mettre en surbrillance une ligne du tableau depuis la barre
+function highlightTableRow(productType, event, section) {
+    // Supprimer toutes les surbrillances de la section concernée
+    document.querySelectorAll(`.table-row[data-section="${section}"]`).forEach(row => {
+        row.classList.remove('highlighted', 'highlighted-cash', 'highlighted-fund');
+    });
+    
+    // Supprimer toutes les surbrillances des segments de la section concernée
+    document.querySelectorAll(`.interactive-segment[data-section="${section}"]`).forEach(segment => {
+        segment.classList.remove('highlighted');
+    });
+    
+    // Ajouter la surbrillance à la ligne ciblée
+    const targetRow = document.querySelector(`.table-row[data-product="${productType}"][data-section="${section}"]`);
+    if (targetRow) {
+        targetRow.classList.add('highlighted');
+        if (productType === 'liquidites') {
+            targetRow.classList.add('highlighted-cash');
+        } else if (productType === 'csa-mixta') {
+            targetRow.classList.add('highlighted-fund');
+        }
+    }
+    
+    // Ajouter la surbrillance au segment ciblé
+    const targetSegment = document.querySelector(`.interactive-segment[data-product="${productType}"][data-section="${section}"]`);
+    if (targetSegment) {
+        targetSegment.classList.add('highlighted');
+    }
+    
+    showBarTooltip(event, section);
+}
+
+// Fonction pour afficher la bulle d'information de la barre
+function showBarTooltip(event, section) {
+    const tooltipId = section === 'allocationEffective' ? 'chartBarTooltipAllocation' : 'chartBarTooltipStrategie';
+    const tooltip = document.getElementById(tooltipId);
+    const segment = event.target;
+    const amount = segment.dataset.amount;
+    const name = segment.dataset.name;
+    
+    if (tooltip && amount && name) {
+        tooltip.innerHTML = `<div style="font-weight: bold; margin-bottom: 4px;">${name}</div><div>${amount}</div>`;
+        const rect = segment.getBoundingClientRect();
+        const chartRect = segment.closest('.investment-chart').getBoundingClientRect();
+        const x = rect.left + rect.width / 2 - chartRect.left;
+        const y = rect.top - chartRect.top;
+        tooltip.style.left = x + 'px';
+        tooltip.style.top = y + 'px';
+        tooltip.style.display = 'block';
+    }
+}
+
+// Fonction pour mettre en surbrillance un segment de la barre depuis le tableau
+function highlightChartSegment(productType, section) {
+    document.querySelectorAll(`.interactive-segment[data-section="${section}"]`).forEach(segment => {
+        segment.classList.remove('highlighted');
+    });
+    const targetSegment = document.querySelector(`.interactive-segment[data-product="${productType}"][data-section="${section}"]`);
+    if (targetSegment) {
+        targetSegment.classList.add('highlighted');
+    }
+}
+
+// Fonction pour mettre en surbrillance un segment de la barre depuis le tableau avec bulle ET coloration
+function highlightChartSegmentFromTable(productType, event, section) {
+    // Supprimer toutes les surbrillances de la section concernée
+    document.querySelectorAll(`.table-row[data-section="${section}"]`).forEach(row => {
+        row.classList.remove('highlighted', 'highlighted-cash', 'highlighted-fund');
+    });
+    
+    document.querySelectorAll(`.interactive-segment[data-section="${section}"]`).forEach(segment => {
+        segment.classList.remove('highlighted');
+    });
+    
+    // Ajouter la surbrillance à la ligne du tableau
+    const tableRow = event.target.closest('.table-row');
+    if (tableRow) {
+        tableRow.classList.add('highlighted');
+        if (productType === 'liquidites') {
+            tableRow.classList.add('highlighted-cash');
+        } else if (productType === 'csa-mixta') {
+            tableRow.classList.add('highlighted-fund');
+        }
+    }
+    
+    // Ajouter la surbrillance au segment de la barre
+    const targetSegment = document.querySelector(`.interactive-segment[data-product="${productType}"][data-section="${section}"]`);
+    if (targetSegment) {
+        targetSegment.classList.add('highlighted');
+    }
+    
+    // Afficher le tooltip
+    const amount = tableRow.dataset.amount;
+    const name = tableRow.dataset.name;
+    const tooltipId = section === 'allocationEffective' ? 'chartBarTooltipAllocation' : 'chartBarTooltipStrategie';
+    const tooltip = document.getElementById(tooltipId);
+    
+    if (tooltip && amount && name && targetSegment) {
+        tooltip.innerHTML = `<div style="font-weight: bold; margin-bottom: 4px;">${name}</div><div>${amount}</div>`;
+        const rect = targetSegment.getBoundingClientRect();
+        const chartRect = targetSegment.closest('.investment-chart').getBoundingClientRect();
+        const x = rect.left + rect.width / 2 - chartRect.left;
+        const y = rect.top - chartRect.top;
+        tooltip.style.left = x + 'px';
+        tooltip.style.top = y + 'px';
+        tooltip.style.display = 'block';
+    }
+}
+
+// Fonction pour supprimer la surbrillance des segments de la barre
+function removeChartHighlight(section) {
+    // Supprimer toutes les surbrillances de la section concernée
+    document.querySelectorAll(`.interactive-segment[data-section="${section}"]`).forEach(segment => {
+        segment.classList.remove('highlighted');
+    });
+    
+    document.querySelectorAll(`.table-row[data-section="${section}"]`).forEach(row => {
+        row.classList.remove('highlighted', 'highlighted-cash', 'highlighted-fund');
+    });
+    
+    // Cacher le tooltip de la section concernée
+    const tooltipId = section === 'allocationEffective' ? 'chartBarTooltipAllocation' : 'chartBarTooltipStrategie';
+    const tooltip = document.getElementById(tooltipId);
+    if (tooltip) {
+        tooltip.style.display = 'none';
+    }
+}
+
+// 3. Initialisation DOMContentLoaded
+// ---
+document.addEventListener('DOMContentLoaded', function() {
+    // Créer le graphique initial
+    createSVGChart('all');
+    // Initialisation du flatpickr pour le range de période
+    flatpickr("#customDateRange", {
+        mode: "range",
+        dateFormat: "d/m/Y",
+        locale: "fr",
+        defaultDate: ["30/06/2024", new Date()],
+        onClose: function(selectedDates, dateStr, instance) {
+            if (selectedDates.length === 2) {
+                const start = selectedDates[0];
+                const end = selectedDates[1];
+                const startStr = start.toLocaleDateString('fr-CH');
+                const endStr = end.toLocaleDateString('fr-CH');
+                instance.input.value = `Du ${startStr} au ${endStr}`;
+                document.querySelectorAll('.period-btn').forEach(t => t.classList.remove('active'));
+            }
+        }
+    });
+    // Forcer la valeur initiale du champ range
+    const fpRange = document.querySelector('#customDateRange')._flatpickr;
+    if (fpRange && fpRange.selectedDates.length === 2) {
+        const start = fpRange.selectedDates[0];
+        const end = fpRange.selectedDates[1];
+        if (start && end) {
+            const startStr = start.toLocaleDateString('fr-CH');
+            const endStr = end.toLocaleDateString('fr-CH');
+            fpRange.input.value = `Du ${startStr} au ${endStr}`;
+        }
+    }
+    // Initialisation du flatpickr pour la date d'allocation (single)
+    flatpickr("#allocationDatePicker", {
+        dateFormat: "d.m.Y",
+        locale: "fr",
+        defaultDate: new Date(),
+        allowInput: true,
+        clickOpens: true,
+        disableMobile: true,
+        onReady: function(selectedDates, dateStr, instance) {
+            if (selectedDates.length > 0) {
+                const date = selectedDates[0];
+                const dd = String(date.getDate()).padStart(2, '0');
+                const mm = String(date.getMonth() + 1).padStart(2, '0');
+                const yyyy = date.getFullYear();
+                instance.input.value = `${dd}.${mm}.${yyyy}`;
+            }
+        }
+    });
+    // Forcer la valeur initiale du champ single
+    const inputAlloc = document.getElementById('allocationDatePicker');
+    if (inputAlloc && inputAlloc._flatpickr && inputAlloc._flatpickr.selectedDates.length > 0) {
+        const date = inputAlloc._flatpickr.selectedDates[0];
+        const dd = String(date.getDate()).padStart(2, '0');
+        const mm = String(date.getMonth() + 1).padStart(2, '0');
+        const yyyy = date.getFullYear();
+        inputAlloc.value = `${dd}.${mm}.${yyyy}`;
+    }
+    // Gestion des onglets d'allocation
+    const tabs = document.querySelectorAll('.allocation-tab');
+    const produit = document.getElementById('allocationProduitView');
+    const classe = document.getElementById('allocationClasseView');
+    if (produit) produit.style.display = 'block';
+    if (classe) classe.style.display = 'none';
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            tabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            if (this.dataset.tab === 'produit') {
+                if (produit) produit.style.display = 'block';
+                if (classe) classe.style.display = 'none';
+            } else if (this.dataset.tab === 'classe') {
+                if (produit) produit.style.display = 'none';
+                if (classe) classe.style.display = 'block';
+            }
+        });
+    });
+    // Gestion des boutons de période pour mettre à jour le graphique et les événements
+    document.querySelectorAll('.period-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            // Retirer l'état actif de tous les boutons
+            document.querySelectorAll('.period-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            // Récupérer la période
+            const period = this.getAttribute('data-period');
+            // Mettre à jour le graphique et les métriques
+            createSVGChart(period);
+            updateMetrics(period);
+            // Si custom, ne rien faire sur le champ, sinon vider le champ custom
+            if (period !== 'custom') {
+                const customInput = document.getElementById('customDateRange');
+                if (customInput) customInput.value = '';
+            }
+        });
+    });
+});
+
+// Fonctions globales pour l'interactivité croisée
+window.highlightTableRow = function(productType, event, section) {
+    // Supprimer toutes les surbrillances de la section concernée
+    document.querySelectorAll(`.table-row[data-section="${section}"]`).forEach(row => {
+        row.classList.remove('highlighted', 'highlighted-cash', 'highlighted-fund');
+    });
+    
+    // Supprimer toutes les surbrillances des segments de la section concernée
+    document.querySelectorAll(`.interactive-segment[data-section="${section}"]`).forEach(segment => {
+        segment.classList.remove('highlighted');
+    });
+    
+    // Ajouter la surbrillance à la ligne ciblée
+    const targetRow = document.querySelector(`.table-row[data-product="${productType}"][data-section="${section}"]`);
+    if (targetRow) {
+        targetRow.classList.add('highlighted');
+        if (productType === 'liquidites') {
+            targetRow.classList.add('highlighted-cash');
+        } else if (productType === 'csa-mixta') {
+            targetRow.classList.add('highlighted-fund');
+        }
+    }
+    
+    // Ajouter la surbrillance au segment ciblé
+    const targetSegment = document.querySelector(`.interactive-segment[data-product="${productType}"][data-section="${section}"]`);
+    if (targetSegment) {
+        targetSegment.classList.add('highlighted');
+    }
+    
+    showBarTooltip(event, section);
+};
+
+window.removeHighlight = function(section) {
+    // Supprimer toutes les surbrillances de la section concernée
+    document.querySelectorAll(`.table-row[data-section="${section}"]`).forEach(row => {
+        row.classList.remove('highlighted', 'highlighted-cash', 'highlighted-fund');
+    });
+    
+    document.querySelectorAll(`.interactive-segment[data-section="${section}"]`).forEach(segment => {
+        segment.classList.remove('highlighted');
+    });
+    
+    // Cacher le tooltip de la section concernée
+    const tooltipId = section === 'allocationEffective' ? 'chartBarTooltipAllocation' : 'chartBarTooltipStrategie';
+    const tooltip = document.getElementById(tooltipId);
+    if (tooltip) tooltip.style.display = 'none';
+}
+
+window.highlightChartSegmentFromTable = function(productType, event, section) {
+    // Supprimer toutes les surbrillances de la section concernée
+    document.querySelectorAll(`.table-row[data-section="${section}"]`).forEach(row => {
+        row.classList.remove('highlighted', 'highlighted-cash', 'highlighted-fund');
+    });
+    
+    document.querySelectorAll(`.interactive-segment[data-section="${section}"]`).forEach(segment => {
+        segment.classList.remove('highlighted');
+    });
+    
+    // Ajouter la surbrillance à la ligne du tableau
+    const tableRow = event.target.closest('.table-row');
+    if (tableRow) {
+        tableRow.classList.add('highlighted');
+        if (productType === 'liquidites') {
+            tableRow.classList.add('highlighted-cash');
+        } else if (productType === 'csa-mixta') {
+            tableRow.classList.add('highlighted-fund');
+        }
+    }
+    
+    // Ajouter la surbrillance au segment de la barre
+    const targetSegment = document.querySelector(`.interactive-segment[data-product="${productType}"][data-section="${section}"]`);
+    if (targetSegment) {
+        targetSegment.classList.add('highlighted');
+    }
+    
+    // Afficher le tooltip
+    const amount = tableRow.dataset.amount;
+    const name = tableRow.dataset.name;
+    const tooltipId = section === 'allocationEffective' ? 'chartBarTooltipAllocation' : 'chartBarTooltipStrategie';
+    const tooltip = document.getElementById(tooltipId);
+    
+    if (tooltip && amount && name && targetSegment) {
+        tooltip.innerHTML = `<div style="font-weight: bold; margin-bottom: 4px;">${name}</div><div>${amount}</div>`;
+        const rect = targetSegment.getBoundingClientRect();
+        const chartRect = targetSegment.closest('.investment-chart').getBoundingClientRect();
+        const x = rect.left + rect.width / 2 - chartRect.left;
+        const y = rect.top - chartRect.top;
+        tooltip.style.left = x + 'px';
+        tooltip.style.top = y + 'px';
+        tooltip.style.display = 'block';
+    }
+}
+
+window.highlightChartSegment = function(productType, section) {
+    document.querySelectorAll(`.interactive-segment[data-section="${section}"]`).forEach(segment => {
+        segment.classList.remove('highlighted');
+    });
+    const targetSegment = document.querySelector(`.interactive-segment[data-product="${productType}"][data-section="${section}"]`);
+    if (targetSegment) {
+        targetSegment.classList.add('highlighted');
+    }
+}
+
+window.showBarTooltip = function(event, section) {
+    const tooltipId = section === 'allocationEffective' ? 'chartBarTooltipAllocation' : 'chartBarTooltipStrategie';
+    const tooltip = document.getElementById(tooltipId);
+    const segment = event.target;
+    const amount = segment.dataset.amount;
+    const name = segment.dataset.name;
+    
+    if (tooltip && amount && name) {
+        tooltip.innerHTML = `<div style="font-weight: bold; margin-bottom: 4px;">${name}</div><div>${amount}</div>`;
+        const rect = segment.getBoundingClientRect();
+        const chartRect = segment.closest('.investment-chart').getBoundingClientRect();
+        const x = rect.left + rect.width / 2 - chartRect.left;
+        const y = rect.top - chartRect.top;
+        tooltip.style.left = x + 'px';
+        tooltip.style.top = y + 'px';
+        tooltip.style.display = 'block';
+    }
+}
+
+// Gestion des onglets Allocation effective
+const allocTabs = document.querySelectorAll('.allocation-tab[data-tab^="produit-alloc"], .allocation-tab[data-tab^="classe-alloc"]');
+const allocProduit = document.getElementById('allocationProduitView');
+const allocClasse = document.getElementById('allocationClasseView');
+if (allocProduit) allocProduit.style.display = 'block';
+if (allocClasse) allocClasse.style.display = 'none';
+allocTabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+        allocTabs.forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        if (this.dataset.tab === 'produit-alloc') {
+            allocProduit.style.display = 'block';
+            allocClasse.style.display = 'none';
+        } else if (this.dataset.tab === 'classe-alloc') {
+            allocProduit.style.display = 'none';
+            allocClasse.style.display = 'block';
+        }
+    });
+});
+
+</script>
+</body>
+</html>

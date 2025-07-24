@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Toggle Sidebar</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        
+        .sidebar {
+            width: 280px;
+            background: #f8f9fa;
+            border-right: 1px solid #e3e6ea;
+            transition: width 0.3s ease;
+            position: relative;
+        }
+        
+        .sidebar.collapsed {
+            width: 70px;
+        }
+        
+        .sidebar-logo {
+            position: absolute;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 30px;
+            display: none;
+            z-index: 10;
+        }
+        
+        .sidebar.collapsed .sidebar-logo {
+            display: block;
+        }
+        
+        .sidebar-content {
+            transition: all 0.3s ease;
+        }
+        
+        .sidebar.collapsed .sidebar-content {
+            display: none;
+        }
+        
+        .main-content {
+            flex: 1;
+            margin-left: 280px;
+            transition: margin-left 0.3s ease;
+        }
+        
+        .main-content.expanded {
+            margin-left: 70px;
+        }
+        
+        .top-bar {
+            background: white;
+            border-bottom: 1px solid #e3e6ea;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-toggle-btn {
+            background: none;
+            border: none;
+            padding: 0.5rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+        }
+        
+        .sidebar-toggle-btn:hover {
+            background-color: rgba(0, 95, 108, 0.1);
+        }
+        
+        .sidebar-toggle-icon {
+            width: 18px;
+            height: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .toggle-line {
+            width: 100%;
+            height: 2px;
+            background-color: #6c757d;
+            border-radius: 1px;
+            transition: all 0.3s ease;
+            transform-origin: center;
+        }
+        
+        .sidebar-toggle-btn:hover .toggle-line {
+            background-color: #005f6c;
+        }
+        
+        .sidebar-toggle-btn.active .toggle-line:nth-child(1) {
+            transform: rotate(45deg) translate(6px, 6px);
+        }
+        
+        .sidebar-toggle-btn.active .toggle-line:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .sidebar-toggle-btn.active .toggle-line:nth-child(3) {
+            transform: rotate(-45deg) translate(6px, -6px);
+        }
+        
+        .content {
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar" id="sidebar">
+            <!-- Logo visible uniquement en position fermée -->
+            <div class="sidebar-logo">
+                <img src="assets/icon-Aromed.svg" alt="Logo Aromed" style="width: 100%; height: 100%; object-fit: contain; border: 1px solid red;">
+            </div>
+            
+            <!-- Contenu visible uniquement en position ouverte -->
+            <div class="sidebar-content" style="padding: 1rem; text-align: center;">
+                <h3>Sidebar</h3>
+                <p>Contenu de la sidebar</p>
+            </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="main-content" id="mainContent">
+            <!-- Top bar -->
+            <div class="top-bar">
+                <div class="top-bar-left">
+                    <button class="sidebar-toggle-btn" id="sidebarToggle" title="Réduire le menu">
+                        <div class="sidebar-toggle-icon">
+                            <div class="toggle-line"></div>
+                            <div class="toggle-line"></div>
+                            <div class="toggle-line"></div>
+                        </div>
+                    </button>
+                </div>
+                <div class="user-actions">
+                    <span>Test Toggle Sidebar</span>
+                </div>
+            </div>
+
+            <!-- Content area -->
+            <div class="content">
+                <h1>Test de la fonctionnalité Toggle</h1>
+                <p>Cliquez sur le bouton avec les 3 lignes dans le header pour tester la fermeture/ouverture de la sidebar.</p>
+                <p>Vous devriez voir :</p>
+                <ul>
+                    <li>La sidebar se réduire à 70px de largeur</li>
+                    <li>Le contenu principal s'étendre</li>
+                    <li>L'icône se transformer en croix</li>
+                </ul>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Fonction pour basculer la sidebar
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            const toggleBtn = document.getElementById('sidebarToggle');
+            
+            if (sidebar && mainContent) {
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('expanded');
+                
+                // Animation de l'icône
+                if (toggleBtn) {
+                    toggleBtn.classList.toggle('active');
+                }
+            }
+        }
+
+        // Initialisation du bouton de toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            if (sidebarToggle) {
+                sidebarToggle.addEventListener('click', toggleSidebar);
+            }
+        });
+    </script>
+</body>
+</html> 
